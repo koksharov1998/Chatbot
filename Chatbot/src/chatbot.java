@@ -6,7 +6,18 @@ public class chatbot
 		{
 			Scanner scanner = new Scanner(System.in);
 			System.out.println("Hello!");
-			System.out.println(questions.ReturnNextQuestion());
-			String answer = scanner.next().toLowerCase();
+			while (true)
+			{
+				System.out.println(questions.ReturnNextQuestion());
+				String answer = scanner.nextLine().toLowerCase();
+				if (answer.equals("quit"))
+				{
+					System.out.println("Bye!");
+					break;
+				}
+			}
+			
+			
+			scanner.close();
 		}
 }
