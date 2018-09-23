@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class chatbot
+public class Chatbot
 {
 		public static void main(String[] args)
 		{
@@ -8,8 +8,9 @@ public class chatbot
 			System.out.println("Hello!");
 			while (true)
 			{
-				//System.out.println(questions.ReturnNextQuestion());
-				pair pair = questions.ReturnNext();
+				//System.out.println(Questions.returnNextQuestion());
+				//Pair pair = Questions.returnNext();
+				Pair pair = Questions.returnQuestionsInOrder();
 				System.out.println(pair.m_first);
 				String answer = scanner.nextLine().toLowerCase();
 				if (answer.equals("quit"))
