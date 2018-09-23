@@ -8,7 +8,8 @@ public class chatbot
 			System.out.println("Hello!");
 			while (true)
 			{
-				System.out.println(questions.ReturnNextQuestion());
+				//System.out.println(questions.ReturnNextQuestion());
+				System.out.println(questions.ReturnNext());
 				String answer = scanner.nextLine().toLowerCase();
 				if (answer.equals("quit"))
 				{
@@ -16,8 +17,6 @@ public class chatbot
 					break;
 				}
 			}
-			
-			
 			scanner.close();
 		}
 }
