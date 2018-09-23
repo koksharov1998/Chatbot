@@ -9,13 +9,18 @@ public class chatbot
 			while (true)
 			{
 				//System.out.println(questions.ReturnNextQuestion());
-				System.out.println(questions.ReturnNext());
+				pair pair = questions.ReturnNext();
+				System.out.println(pair.m_first);
 				String answer = scanner.nextLine().toLowerCase();
 				if (answer.equals("quit"))
 				{
 					System.out.println("Bye!");
 					break;
 				}
+				if (answer.equals(pair.m_second.toLowerCase()))
+					System.out.println("It's right!");
+				else
+					System.out.println("It's wrong!");
 			}
 			scanner.close();
 		}

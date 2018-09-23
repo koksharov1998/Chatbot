@@ -12,10 +12,10 @@ public class questions
 
 	public static String[][] questions = {{"Pizza?"}, {"Cake?"}, {"Water?"}};
 
-    public static String ReturnNext()
+    public static pair ReturnNext()
     {
         Random random = new Random();
-        return quiz[random.nextInt(quiz.length)].m_first;
+        return quiz[random.nextInt(quiz.length)];
     }
 
 	public static String ReturnNextQuestion()
