@@ -1,28 +1,27 @@
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 
 public class User {
-    User(){
-        mark=0;
+
+    // количество правильных ответов пользователя
+    private int m_score = 0;
+
+    // ?Списко вопросов, заданных пользователю?
+    private HashSet<Integer> m_questions;
+
+    // ?Метод, говорящий о том был ли у пользователя определённый вопрос?
+    public boolean contains(int ind) {
+        return m_questions.contains(ind);
     }
 
-    private HashSet<Integer> qestions;
-    private int mark;
-
-    public boolean contains(int ind){
-        return qestions.contains(ind);
+    public void pushQuestion(int ind) {
+        m_questions.add(ind);
     }
 
-    public void pushQestions(int ind){
-        qestions.add(ind);
+    public int getScore() {
+        return m_score;
     }
 
-    public int getMark() {
-        return mark;
-    }
-
-    public void upMark(){
-        mark++;
+    public void upScore() {
+        m_score++;
     }
 }

@@ -8,24 +8,30 @@ public class Chatbot
 			Scanner scanner = new Scanner(System.in);
 			Quiz quiz = new Quiz("quiz.txt");
 
-			//QuizReader qr = new QuizReader("quiz.txt");
 			System.out.println("Hello!");
+			String answer = "";
+			Pair pair = new Pair("","");
 			while (true)
 			{
-				Pair pair = Quiz.returnQuestionsInOrder();
-				System.out.println(pair.m_first);
-				String answer = scanner.nextLine().toLowerCase();
+				if (!answer.equals("result")) {
+					pair = quiz.returnQuestionsInOrder();
+					//pair = Quiz.returnQuestionsInOrder();
+					System.out.println(pair.getFirst());
+				}
+				answer = scanner.nextLine().toLowerCase();
 				if (answer.equals("quit"))
 				{
+					System.out.println("Your score: " + user.getScore());
 					System.out.println("Bye!");
 					break;
 				}
 				if (answer.equals("result"))
 				{
-					System.out.println(user.getMark());
+					System.out.println("Your score: " + user.getScore());
+					continue;
 				}
-				if (answer.equals(pair.m_second.toLowerCase())) {
-					user.upMark();
+				if (answer.equals(pair.getSecond().toLowerCase())) {
+					user.upScore();
 					System.out.println("It's right!");
 				}
 				else
