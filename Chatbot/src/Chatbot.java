@@ -8,9 +8,8 @@ public class Chatbot
 			System.out.println("Hello!");
 			while (true)
 			{
-				//System.out.println(Questions.returnNextQuestion());
 				//Pair pair = Questions.returnNext();
-				Pair pair = Questions.returnQuestionsInOrder();
+				Pair pair = Quiz.returnQuestionsInOrder();
 				System.out.println(pair.m_first);
 				String answer = scanner.nextLine().toLowerCase();
 				if (answer.equals("quit"))
