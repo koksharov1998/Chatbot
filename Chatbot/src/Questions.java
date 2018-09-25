@@ -3,7 +3,7 @@ import java.util.Random;
 public class Questions
 {
 
-	public static String[][] questions = {{"Pizza?"}, {"Cake?"}, {"Water?"}, {"Serov?"};
+	public static String[][] questions = {{"Pizza?"}, {"Cake?"}, {"Water?"}, {"Serov?"}};
 
 	public static String returnNextQuestion()
     {
