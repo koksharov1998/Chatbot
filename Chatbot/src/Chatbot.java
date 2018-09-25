@@ -4,6 +4,7 @@ public class Chatbot
 {
 		public static void main(String[] args)
 		{
+			User user = new User();
 			Scanner scanner = new Scanner(System.in);
 			System.out.println("Hello!");
 			while (true)
@@ -17,8 +18,14 @@ public class Chatbot
 					System.out.println("Bye!");
 					break;
 				}
-				if (answer.equals(pair.m_second.toLowerCase()))
+				if (answer.equals("result"))
+				{
+					System.out.println(user.getMark());
+				}
+				if (answer.equals(pair.m_second.toLowerCase())) {
+					user.upMark();
 					System.out.println("It's right!");
+				}
 				else
 					System.out.println("It's wrong!");
 			}
