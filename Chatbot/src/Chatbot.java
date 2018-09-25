@@ -5,10 +5,12 @@ public class Chatbot
 		public static void main(String[] args)
 		{
 			Scanner scanner = new Scanner(System.in);
+			Quiz quiz = new Quiz("quiz.txt");
+
+			//QuizReader qr = new QuizReader("quiz.txt");
 			System.out.println("Hello!");
 			while (true)
 			{
-				//Pair pair = Questions.returnNext();
 				Pair pair = Quiz.returnQuestionsInOrder();
 				System.out.println(pair.m_first);
 				String answer = scanner.nextLine().toLowerCase();

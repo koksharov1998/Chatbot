@@ -1,0 +1,8 @@
+Question: How many bits in byte?
+Answer: 8
+Question: How many days in a leap year?
+Answer: 366
+Question: What is the color of the traffic light?
+Answer: Red
+Question: What language was I written in?
+Answer: Java
