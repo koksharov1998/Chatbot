@@ -3,16 +3,16 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class QuizReader {
-    private String m_fileName;
+    private String fileName;
 
-    QuizReader(String fileName) {
-        m_fileName = fileName;
+    public QuizReader(String fn) {
+        fileName = fn;
     }
 
     public Pair[] readAndPrintFromFile() {
         ArrayList<Pair> text = new ArrayList<Pair>();
         try {
-            FileReader fr = new FileReader(m_fileName);
+            FileReader fr = new FileReader(fileName);
             Scanner scan = new Scanner(fr);
             int i = 1;
             String first = "";
@@ -31,10 +31,10 @@ public class QuizReader {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-        for (Pair line : text) {
+        /*for (Pair line : text) {
             System.out.println(line.getFirst());
             System.out.println(line.getSecond());
-        }
+        }*/
         return text.toArray(new Pair[text.size()]);
     }
 }

@@ -1,27 +1,23 @@
-import java.util.HashSet;
+import java.util.Set;
 
 public class User {
 
-    // количество правильных ответов пользователя
-    private int m_score = 0;
+    private int score = 0;
+    private Set<Integer> questions;
 
-    // ?Списко вопросов, заданных пользователю?
-    private HashSet<Integer> m_questions;
-
-    // ?Метод, говорящий о том был ли у пользователя определённый вопрос?
     public boolean contains(int ind) {
-        return m_questions.contains(ind);
+        return questions.contains(ind);
     }
 
     public void pushQuestion(int ind) {
-        m_questions.add(ind);
+        questions.add(ind);
     }
 
     public int getScore() {
-        return m_score;
+        return score;
     }
 
     public void upScore() {
-        m_score++;
+        score++;
     }
 }

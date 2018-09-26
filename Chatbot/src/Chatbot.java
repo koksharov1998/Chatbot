@@ -9,13 +9,13 @@ public class Chatbot
 			Quiz quiz = new Quiz("quiz.txt");
 
 			System.out.println("Hello!");
+			writeHelp();
 			String answer = "";
 			Pair pair = new Pair("","");
 			while (true)
 			{
-				if (!answer.equals("result")) {
+				if (!answer.equals("result") || !answer.equals("help")) {
 					pair = quiz.returnQuestionsInOrder();
-					//pair = Quiz.returnQuestionsInOrder();
 					System.out.println(pair.getFirst());
 				}
 				answer = scanner.nextLine().toLowerCase();
@@ -30,6 +30,10 @@ public class Chatbot
 					System.out.println("Your score: " + user.getScore());
 					continue;
 				}
+				if (answer.equals("help")){
+					writeHelp();
+					continue;
+				}
 				if (answer.equals(pair.getSecond().toLowerCase())) {
 					user.upScore();
 					System.out.println("It's right!");
@@ -38,5 +42,10 @@ public class Chatbot
 					System.out.println("It's wrong!");
 			}
 			scanner.close();
+		}
+
+		private static void writeHelp()
+		{
+			System.out.println("\nhelp\nresult\nquit\n");
 		}
 }
