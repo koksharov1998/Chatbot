@@ -7,19 +7,20 @@ public class Chatbot {
     Scanner scanner = new Scanner(System.in);
     Quiz quiz = new Quiz("quiz.txt");
 
-    System.out.println("Hello!");
+    System.out
+        .println("Hello, dear user!\nI'm java-chatbot. :)\nI can do some interesting things.");
     writeHelp();
+    System.out.println("Now we can start quiz! Let's go!");
     String answer = "";
-    Pair pair = new Pair("", "");
     while (true) {
       if (!answer.equals("result") && !answer.equals("help")) {
-        pair = quiz.returnQuestionsInOrder();
-        System.out.println(pair.getFirst());
+        if (!quiz.loadQuestionInOrder()){
+          break;
+        }
+        System.out.println(quiz.getCurrentQuestion());
       }
       answer = scanner.nextLine().toLowerCase();
       if (answer.equals("quit")) {
-        System.out.println("Your score: " + user.getScore());
-        System.out.println("Bye!");
         break;
       }
       if (answer.equals("result")) {
@@ -30,18 +31,15 @@ public class Chatbot {
         writeHelp();
         continue;
       }
-      quiz.checkAnswer(user, answer, pair);
-      /*if (answer.equals(pair.getSecond().toLowerCase())) {
-        user.upScore();
-        System.out.println("It's right!");
-      } else {
-        System.out.println("It's wrong!");
-      }*/
+      quiz.checkAnswer(user, answer);
     }
+    System.out.println("Your score: " + user.getScore());
+    System.out.println("Bye!");
     scanner.close();
   }
 
   private static void writeHelp() {
-    System.out.println("help\nresult\nquit");
+    System.out.println(
+        "Command list:\nhelp -- shows command list\nresult -- shows your score\nquit -- finishes our dialog");
   }
 }

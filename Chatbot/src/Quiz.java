@@ -3,14 +3,24 @@ import java.util.Random;
 public class Quiz {
 
   private int number = -1;
-  private Pair[] questions;
-  private Pair[] quiz; /* = new Pair[]
-            {
-                    new Pair("How many bits in byte?", "8"),
-                    new Pair("How many days in a leap year?", "366"),
-                    new Pair("What is the color of the traffic light?", "Red"),
-                    new Pair("What language was I written in?", "Java")
-            };*/
+  private String currentQuestion;
+
+  public String getCurrentQuestion() {
+    return currentQuestion;
+  }
+
+  private String currentAnswer;
+  private Pair[] quiz;
+
+  public Quiz() {
+    quiz = new Pair[]
+        {
+            new Pair("How many bits in byte?", "8")//,
+            //new Pair("How many days in a leap year?", "366"),
+            //new Pair("What is the color of the traffic light?", "Red"),
+            //new Pair("What language was I written in?", "Java")
+        };
+  }
 
   public Quiz(String fileName) {
     QuizReader qr = new QuizReader(fileName);
@@ -18,24 +28,26 @@ public class Quiz {
   }
 
 
-  private Pair returnNext() {
+  private void loadRandomQuestion() {
     Random random = new Random();
-    return quiz[random.nextInt(quiz.length)];
+    currentQuestion = quiz[random.nextInt(quiz.length)].getFirst();
+    currentAnswer = quiz[random.nextInt(quiz.length)].getSecond();
   }
 
-  public Pair returnQuestionsInOrder() {
+  public boolean loadQuestionInOrder() {
     number++;
     if (number < quiz.length) {
-      return quiz[number];
+      currentQuestion = quiz[number].getFirst();
+      currentAnswer = quiz[number].getSecond();
+      return true;
     } else {
-      return returnNext();
+      //loadRandomQuestion();
+      return false;
     }
-    //return new Pair("I have no more questions.", null);
-    //throw new IndexOutOfBoundsException();
   }
 
-  public void checkAnswer(User user, String answer, Pair pair){
-    if (answer.equals(pair.getSecond().toLowerCase())) {
+  public void checkAnswer(User user, String answer) {
+    if (answer.equals(currentAnswer.toLowerCase())) {
       user.upScore();
       System.out.println("It's right!");
     } else {
