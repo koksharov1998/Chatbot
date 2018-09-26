@@ -30,17 +30,18 @@ public class Chatbot {
         writeHelp();
         continue;
       }
-      if (answer.equals(pair.getSecond().toLowerCase())) {
+      quiz.checkAnswer(user, answer, pair);
+      /*if (answer.equals(pair.getSecond().toLowerCase())) {
         user.upScore();
         System.out.println("It's right!");
       } else {
         System.out.println("It's wrong!");
-      }
+      }*/
     }
     scanner.close();
   }
 
   private static void writeHelp() {
-    System.out.println("\nhelp\nresult\nquit\n");
+    System.out.println("help\nresult\nquit");
   }
 }

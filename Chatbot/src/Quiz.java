@@ -18,7 +18,7 @@ public class Quiz {
   }
 
 
-  public Pair returnNext() {
+  private Pair returnNext() {
     Random random = new Random();
     return quiz[random.nextInt(quiz.length)];
   }
@@ -32,5 +32,14 @@ public class Quiz {
     }
     //return new Pair("I have no more questions.", null);
     //throw new IndexOutOfBoundsException();
+  }
+
+  public void checkAnswer(User user, String answer, Pair pair){
+    if (answer.equals(pair.getSecond().toLowerCase())) {
+      user.upScore();
+      System.out.println("It's right!");
+    } else {
+      System.out.println("It's wrong!");
+    }
   }
 }
