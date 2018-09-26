@@ -1,10 +1,10 @@
 # Chatbot
 Chat-bot on Java
 -стиль кода +
--тесты
+-тесты --+
 -логика в quiz +
 -нотация +
 -хелп и приветствие +
--quizreader, input stream
+-quizreader, input stream ?
 -статику убрать, модификаторы доступа +
 -скинуть репозиторий +
