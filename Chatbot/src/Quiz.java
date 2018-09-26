@@ -3,6 +3,7 @@ import java.util.Random;
 public class Quiz {
 
   private int number = -1;
+  private int currentQuestionID;
   private String currentQuestion;
 
   public String getCurrentQuestion() {
@@ -30,6 +31,7 @@ public class Quiz {
 
   private boolean loadRandomQuestion() {
     Random random = new Random();
+    currentQuestionID = random.nextInt(quiz.length);
     currentQuestion = quiz[random.nextInt(quiz.length)].getFirst();
     currentAnswer = quiz[random.nextInt(quiz.length)].getSecond();
     return true;
@@ -38,6 +40,7 @@ public class Quiz {
   public boolean loadQuestionInOrder() {
     number++;
     if (number < quiz.length) {
+      currentQuestionID = number;
       currentQuestion = quiz[number].getFirst();
       currentAnswer = quiz[number].getSecond();
       return true;
@@ -50,6 +53,7 @@ public class Quiz {
   public void checkAnswer(User user, String answer) {
     if (answer.equals(currentAnswer.toLowerCase())) {
       user.upScore();
+      user.pushQuestion(currentQuestionID);
       System.out.println("It's right!");
     } else {
       System.out.println("It's wrong!");
