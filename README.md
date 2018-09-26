@@ -2,7 +2,7 @@
 Chat-bot on Java
 -стиль кода +
 -тесты
--логика в quiz --+
+-логика в quiz +
 -нотация +
 -хелп и приветствие +
 -quizreader, input stream

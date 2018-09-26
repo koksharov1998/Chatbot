@@ -28,10 +28,11 @@ public class Quiz {
   }
 
 
-  private void loadRandomQuestion() {
+  private boolean loadRandomQuestion() {
     Random random = new Random();
     currentQuestion = quiz[random.nextInt(quiz.length)].getFirst();
     currentAnswer = quiz[random.nextInt(quiz.length)].getSecond();
+    return true;
   }
 
   public boolean loadQuestionInOrder() {
