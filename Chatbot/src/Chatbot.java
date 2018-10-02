@@ -11,27 +11,31 @@ public class Chatbot {
         .println("Hello, dear user!\nI'm java-chatbot. :)\nI can do some interesting things.");
     writeHelp();
     System.out.println("Now we can start quiz! Let's go!");
-    String answer = "";
+    String input = "";
     while (true) {
-      if (!answer.equals("result") && !answer.equals("help")) {
+      if (!input.equals("result") && !input.equals("help") && !input.equals("repeat")) {
         if (!quiz.loadQuestionInOrder()){
           break;
         }
         System.out.println(quiz.getCurrentQuestion());
       }
-      answer = scanner.nextLine().toLowerCase();
-      if (answer.equals("quit")) {
+      input = scanner.nextLine().toLowerCase();
+      if (input.equals("quit")) {
         break;
       }
-      if (answer.equals("result")) {
+      if (input.equals("result")) {
         System.out.println("Your score: " + user.getScore());
         continue;
       }
-      if (answer.equals("help")) {
+      if (input.equals("repeat")) {
+        System.out.println(quiz.getCurrentQuestion());
+        continue;
+      }
+      if (input.equals("help")) {
         writeHelp();
         continue;
       }
-      quiz.checkAnswer(user, answer);
+      quiz.checkAnswer(user, input);
     }
     System.out.println("Your score: " + user.getScore());
     System.out.println("Bye!");
@@ -40,6 +44,6 @@ public class Chatbot {
 
   private static void writeHelp() {
     System.out.println(
-        "Command list:\nhelp -- shows command list\nresult -- shows your score\nquit -- finishes our dialog");
+        "Command list:\nhelp -- shows command list\nresult -- shows your score\nquit -- finishes our dialog\nrepeat -- repeat last question");
   }
 }
