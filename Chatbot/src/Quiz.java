@@ -2,8 +2,7 @@ import java.util.Random;
 
 public class Quiz {
 
-  private int number = -1;
-  private int currentQuestionID;
+  private int currentQuestionID = -1;
   private String currentQuestion;
 
   public String getCurrentQuestion() {
@@ -38,11 +37,10 @@ public class Quiz {
   }
 
   public boolean loadQuestionInOrder() {
-    number++;
-    if (number < quiz.length) {
-      currentQuestionID = number;
-      currentQuestion = quiz[number].getFirst();
-      currentAnswer = quiz[number].getSecond();
+    currentQuestionID++;
+    if (currentQuestionID < quiz.length) {
+      currentQuestion = quiz[currentQuestionID].getFirst();
+      currentAnswer = quiz[currentQuestionID].getSecond();
       return true;
     } else {
       //loadRandomQuestion();
