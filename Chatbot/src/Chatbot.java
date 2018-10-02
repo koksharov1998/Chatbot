@@ -11,31 +11,33 @@ public class Chatbot {
         .println("Hello, dear user!\nI'm java-chatbot. :)\nI can do some interesting things.");
     writeHelp();
     System.out.println("Now we can start quiz! Let's go!");
-    String input = "";
+    quiz.loadQuestionInOrder();
+    System.out.println(quiz.getCurrentQuestion());
+    String input = scanner.nextLine().toLowerCase();
+    loop:
     while (true) {
-      if (!input.equals("result") && !input.equals("help") && !input.equals("repeat")) {
-        if (!quiz.loadQuestionInOrder()){
+      switch (input) {
+        case "help":
+          writeHelp();
           break;
-        }
-        System.out.println(quiz.getCurrentQuestion());
+        case "result":
+          System.out.println("Your score: " + user.getScore());
+          break;
+        case "repeat":
+          System.out.println(quiz.getCurrentQuestion());
+          break;
+        case "quit":
+          break loop;
+        default:
+          quiz.checkAnswer(user, input);
+          if (!quiz.loadQuestionInOrder()) {
+            break loop;
+          }
+          System.out.println(quiz.getCurrentQuestion());
+          input = scanner.nextLine().toLowerCase();
+          continue;
       }
       input = scanner.nextLine().toLowerCase();
-      if (input.equals("quit")) {
-        break;
-      }
-      if (input.equals("result")) {
-        System.out.println("Your score: " + user.getScore());
-        continue;
-      }
-      if (input.equals("repeat")) {
-        System.out.println(quiz.getCurrentQuestion());
-        continue;
-      }
-      if (input.equals("help")) {
-        writeHelp();
-        continue;
-      }
-      quiz.checkAnswer(user, input);
     }
     System.out.println("Your score: " + user.getScore());
     System.out.println("Bye!");
