@@ -14,9 +14,17 @@ class QuizTest {
 
   @Test
   void loadQuestionInOrder() {
+    Quiz quiz = new Quiz();
+    assertTrue(quiz.loadQuestionInOrder());
+    assertFalse(quiz.loadQuestionInOrder());
   }
 
   @Test
-  void checkAnswer() {
+  void checkAnswerTest() {
+    User user = new User();
+    String answer = "8";
+    Quiz quiz = new Quiz();
+    quiz.loadQuestionInOrder();
+    assertTrue(quiz.checkAnswer(user, answer));
   }
 }

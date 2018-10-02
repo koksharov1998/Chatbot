@@ -48,13 +48,15 @@ public class Quiz {
     }
   }
 
-  public void checkAnswer(User user, String answer) {
+  public boolean checkAnswer(User user, String answer) {
     if (answer.equals(currentAnswer.toLowerCase())) {
       user.upScore();
       user.pushQuestion(currentQuestionID);
       System.out.println("It's right!");
+      return true;
     } else {
       System.out.println("It's wrong!");
+      return false;
     }
   }
 }
