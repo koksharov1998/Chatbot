@@ -46,6 +46,6 @@ public class Chatbot {
 
   private static void writeHelp() {
     System.out.println(
-        "Command list:\nhelp -- shows command list\nresult -- shows your score\nquit -- finishes our dialog\nrepeat -- repeat last question");
+        "Command list:\nhelp -- shows command list\nrepeat -- repeat last question\nresult -- shows your score\nquit -- finishes our dialog");
   }
 }
