@@ -5,7 +5,11 @@ import org.junit.jupiter.api.Test;
 class QuizTest {
 
   @Test
-  void getCurrentQuestion() {
+  void getCurrentQuestionTest() {
+    Quiz quiz = new Quiz();
+    quiz.loadQuestionInOrder();
+    String actual = quiz.getCurrentQuestion();
+    assertEquals("How many bits in byte?", actual);
   }
 
   @Test
