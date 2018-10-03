@@ -14,12 +14,6 @@ public class Quiz {
 		return quiz[currentQuestionID].getFirst();
 	}
 
-	public boolean loadRandomQuestion() {
-		Random random = new Random();
-		currentQuestionID = random.nextInt(quiz.length);
-		return true;
-	}
-
 	public boolean moveNextQuestion() {
 		currentQuestionID++;
 		if (currentQuestionID < quiz.length) {
