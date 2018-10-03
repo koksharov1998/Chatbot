@@ -8,8 +8,6 @@ Question: What language was I written in?
 Answer: Java
 Question: The capital of the Great Britain?
 Answer: London
-Question: Имя разработчика этой программы, который не писал этот вопрос?
-Answer: Евгений
 Question: When is Valentine's Day celebrated?
 Answer: 14 february
 Question: How many people go on the field from one football team?
