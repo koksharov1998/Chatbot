@@ -6,7 +6,6 @@ public class Chatbot {
     User user = new User();
     Scanner scanner = new Scanner(System.in);
     Quiz quiz = new Quiz("quiz.txt");
-
     System.out
         .println("Hello, dear user!\nI'm java-chatbot. :)\nI can do some interesting things.");
     writeHelp();
@@ -14,8 +13,8 @@ public class Chatbot {
     quiz.loadQuestionInOrder();
     System.out.println(quiz.getCurrentQuestion());
     String input = scanner.nextLine().toLowerCase();
-    loop:
-    while (true) {
+    boolean loop = true;
+    while (loop) {
       switch (input) {
         case "help":
           writeHelp();
@@ -27,15 +26,15 @@ public class Chatbot {
           System.out.println(quiz.getCurrentQuestion());
           break;
         case "quit":
-          break loop;
+          loop = false;
+          continue;
         default:
           quiz.checkAnswer(user, input);
           if (!quiz.loadQuestionInOrder()) {
-            break loop;
+            loop = false;
+            continue;
           }
           System.out.println(quiz.getCurrentQuestion());
-          input = scanner.nextLine().toLowerCase();
-          continue;
       }
       input = scanner.nextLine().toLowerCase();
     }

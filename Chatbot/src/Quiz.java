@@ -2,61 +2,45 @@ import java.util.Random;
 
 public class Quiz {
 
-  private int currentQuestionID = -1;
-  private String currentQuestion;
+	private int currentQuestionID = -1;
+	private Pair[] quiz;
 
-  public String getCurrentQuestion() {
-    return currentQuestion;
-  }
+	public Quiz() {
+	}
 
-  private String currentAnswer;
-  private Pair[] quiz;
+	public Quiz(String fileName) {
+		QuizReader qr = new QuizReader(fileName);
+		quiz = qr.readAndPrintFromFile();
+	}
 
-  public Quiz() {
-    quiz = new Pair[]
-        {
-            new Pair("How many bits in byte?", "8")//,
-            //new Pair("How many days in a leap year?", "366"),
-            //new Pair("What is the color of the traffic light?", "Red"),
-            //new Pair("What language was I written in?", "Java")
-        };
-  }
+	public String getCurrentQuestion() {
+		return quiz[currentQuestionID].getFirst();
+	}
 
-  public Quiz(String fileName) {
-    QuizReader qr = new QuizReader(fileName);
-    quiz = qr.readAndPrintFromFile();
-  }
+	private boolean loadRandomQuestion() {
+		Random random = new Random();
+		currentQuestionID = random.nextInt(quiz.length);
+		return true;
+	}
 
+	public boolean loadQuestionInOrder() {
+		currentQuestionID++;
+		if (currentQuestionID < quiz.length) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
-  private boolean loadRandomQuestion() {
-    Random random = new Random();
-    currentQuestionID = random.nextInt(quiz.length);
-    currentQuestion = quiz[random.nextInt(quiz.length)].getFirst();
-    currentAnswer = quiz[random.nextInt(quiz.length)].getSecond();
-    return true;
-  }
-
-  public boolean loadQuestionInOrder() {
-    currentQuestionID++;
-    if (currentQuestionID < quiz.length) {
-      currentQuestion = quiz[currentQuestionID].getFirst();
-      currentAnswer = quiz[currentQuestionID].getSecond();
-      return true;
-    } else {
-      //loadRandomQuestion();
-      return false;
-    }
-  }
-
-  public boolean checkAnswer(User user, String answer) {
-    if (answer.equals(currentAnswer.toLowerCase())) {
-      user.upScore();
-      user.pushQuestion(currentQuestionID);
-      System.out.println("It's right!");
-      return true;
-    } else {
-      System.out.println("It's wrong!");
-      return false;
-    }
-  }
+	public boolean checkAnswer(User user, String answer) {
+		if (answer.equals(quiz[currentQuestionID].getSecond().toLowerCase())) {
+			user.upScore();
+			user.pushQuestion(currentQuestionID);
+			System.out.println("It's right!");
+			return true;
+		} else {
+			System.out.println("It's wrong!");
+			return false;
+		}
+	}
 }

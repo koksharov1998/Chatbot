@@ -1,6 +1,8 @@
-import static org.junit.jupiter.api.Assertions.*;
+//import org.junit.jupiter.api.Test;
+import static org.junit.Assert.*;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+//import static org.junit.jupiter.api.Assertions.*;
 
 class QuizTest {
 
