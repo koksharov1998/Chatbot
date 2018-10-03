@@ -10,7 +10,7 @@ public class Chatbot {
         .println("Hello, dear user!\nI'm java-chatbot. :)\nI can do some interesting things.");
     writeHelp();
     System.out.println("Now we can start quiz! Let's go!");
-    quiz.loadQuestionInOrder();
+    quiz.moveNextQuestion();
     System.out.println(quiz.getCurrentQuestion());
     String input = scanner.nextLine().toLowerCase();
     boolean loop = true;
@@ -30,7 +30,7 @@ public class Chatbot {
           continue;
         default:
           quiz.checkAnswer(user, input);
-          if (!quiz.loadQuestionInOrder()) {
+          if (!quiz.moveNextQuestion()) {
             loop = false;
             continue;
           }

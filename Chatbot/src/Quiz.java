@@ -14,13 +14,13 @@ public class Quiz {
 		return quiz[currentQuestionID].getFirst();
 	}
 
-	private boolean loadRandomQuestion() {
+	public boolean loadRandomQuestion() {
 		Random random = new Random();
 		currentQuestionID = random.nextInt(quiz.length);
 		return true;
 	}
 
-	public boolean loadQuestionInOrder() {
+	public boolean moveNextQuestion() {
 		currentQuestionID++;
 		if (currentQuestionID < quiz.length) {
 			return true;
