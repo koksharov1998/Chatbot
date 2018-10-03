@@ -5,12 +5,9 @@ public class Quiz {
 	private int currentQuestionID = -1;
 	private Pair[] quiz;
 
-	public Quiz() {
-	}
-
 	public Quiz(String fileName) {
 		QuizReader qr = new QuizReader(fileName);
-		quiz = qr.readAndPrintFromFile();
+		quiz = qr.readFromFile();
 	}
 
 	public String getCurrentQuestion() {

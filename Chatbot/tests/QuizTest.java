@@ -1,14 +1,14 @@
-//import org.junit.jupiter.api.Test;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
-//import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 class QuizTest {
 
   @Test
   void getCurrentQuestionTest() {
-    Quiz quiz = new Quiz();
+    Quiz quiz = new Quiz("testQuiz.txt");
     quiz.loadQuestionInOrder();
     String actual = quiz.getCurrentQuestion();
     assertEquals("How many bits in byte?", actual);
@@ -16,7 +16,7 @@ class QuizTest {
 
   @Test
   void loadQuestionInOrder() {
-    Quiz quiz = new Quiz();
+    Quiz quiz = new Quiz("testQuiz.txt");
     assertTrue(quiz.loadQuestionInOrder());
     assertFalse(quiz.loadQuestionInOrder());
   }
@@ -24,9 +24,9 @@ class QuizTest {
   @Test
   void checkAnswerTest() {
     User user = new User();
-    String answer = "8";
-    Quiz quiz = new Quiz();
+    Quiz quiz = new Quiz("testQuiz.txt");
     quiz.loadQuestionInOrder();
-    assertTrue(quiz.checkAnswer(user, answer));
+    assertTrue(quiz.checkAnswer(user, "11"));
+    assertFalse(quiz.checkAnswer(user, "22"));
   }
 }
