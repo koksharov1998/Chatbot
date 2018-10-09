@@ -2,6 +2,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,16 @@ class QuizTest {
     }
   }
 
+  private void deleteTestQuizFile() {
+    try {
+      File file = new File("testQuiz.txt");
+      if (!file.delete())
+        throw new Exception("File didn't delete");
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
+  }
+
   @Test
   void returnRightCurrentQuestion() {
     createTestQuizFile();
@@ -25,6 +36,7 @@ class QuizTest {
     quiz.moveNextQuestion();
     assertEquals("How many people go on the field from one football team?",
         quiz.getCurrentQuestion());
+    deleteTestQuizFile();
   }
 
   @Test
@@ -33,6 +45,7 @@ class QuizTest {
     Quiz quiz = new Quiz("testQuiz.txt");
     assertTrue(quiz.moveNextQuestion());
     assertFalse(quiz.moveNextQuestion());
+    deleteTestQuizFile();
   }
 
   @Test
@@ -42,6 +55,7 @@ class QuizTest {
     Quiz quiz = new Quiz("testQuiz.txt");
     quiz.moveNextQuestion();
     assertTrue(quiz.checkAnswer(user, "11"));
+    deleteTestQuizFile();
   }
 
   @Test
@@ -51,5 +65,6 @@ class QuizTest {
     Quiz quiz = new Quiz("testQuiz.txt");
     quiz.moveNextQuestion();
     assertFalse(quiz.checkAnswer(user, "22"));
+    deleteTestQuizFile();
   }
 }

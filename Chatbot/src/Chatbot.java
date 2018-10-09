@@ -16,14 +16,14 @@ public class Chatbot {
     boolean loop = true;
     while (loop) {
       input = scanner.nextLine().toLowerCase();
-      loop = doSmth(input, quiz, user);
+      loop = handleInput(input, quiz, user);
     }
     System.out.println("Your score: " + user.getScore());
     System.out.println("Bye!");
     scanner.close();
   }
 
-  private boolean doSmth(String input, Quiz quiz, User user) {
+  private boolean handleInput(String input, Quiz quiz, User user) {
     switch (input) {
       case "help":
         writeHelp();
