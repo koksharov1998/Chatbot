@@ -12,11 +12,11 @@ public class Chatbot {
     System.out.println("Now we can start quiz! Let's go!");
     quiz.moveNextQuestion();
     System.out.println(quiz.getCurrentQuestion());
-    String input = scanner.nextLine().toLowerCase();
+    String input = "";
     boolean loop = true;
     while (loop) {
-      loop = doSmth(input, quiz, user);
       input = scanner.nextLine().toLowerCase();
+      loop = doSmth(input, quiz, user);
     }
     System.out.println("Your score: " + user.getScore());
     System.out.println("Bye!");
@@ -24,7 +24,6 @@ public class Chatbot {
   }
 
   private boolean doSmth(String input, Quiz quiz, User user) {
-    /*
     switch (input) {
       case "help":
         writeHelp();
@@ -36,17 +35,14 @@ public class Chatbot {
         System.out.println(quiz.getCurrentQuestion());
         break;
       case "quit":
-        loop = false;
-        continue;
+        return false;
       default:
         quiz.checkAnswer(user, input);
         if (!quiz.moveNextQuestion()) {
-          loop = false;
-          continue;
+          return false;
         }
         System.out.println(quiz.getCurrentQuestion());
     }
-    */
     return true;
   }
 

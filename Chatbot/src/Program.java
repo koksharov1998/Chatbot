@@ -1,7 +1,6 @@
-public class Main {
+public class Program {
 
   public static void main(String[] args) {
-    // ну название надо поменять конешн
     Chatbot chatbot = new Chatbot();
     chatbot.start();
   }
