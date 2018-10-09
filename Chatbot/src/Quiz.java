@@ -1,3 +1,5 @@
+import java.util.List;
+
 public class Quiz {
 
   private int currentQuestionID = -1;
@@ -32,4 +34,10 @@ public class Quiz {
       return false;
     }
   }
+/*
+  public void addQuestion(String question, String answer) {
+    List<Pair> newQuiz = new List<Pair>(quiz);
+
+  }
+  */
 }
