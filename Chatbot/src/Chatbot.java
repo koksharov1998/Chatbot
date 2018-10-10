@@ -3,11 +3,12 @@ import java.util.Scanner;
 public class Chatbot {
 
   public void start() {
-    User user = new User();
+    User user = new User("user");
     Scanner scanner = new Scanner(System.in);
     Quiz quiz = new Quiz("quiz.txt");
     System.out
-        .println("Hello, dear user!\nI'm java-chatbot. :)\nI can do some interesting things.");
+        .println("Hello, dear " + user.getName()
+            + "!\nI'm java-chatbot. :)\nI can do some interesting things.");
     writeHelp();
     System.out.println("Now we can start quiz! Let's go!");
     quiz.moveNextQuestion();

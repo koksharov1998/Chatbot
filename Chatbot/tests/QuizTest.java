@@ -52,7 +52,7 @@ class QuizTest {
   @Test
   void rightAnswerIsRight() {
     createTestQuizFile();
-    User user = new User();
+    User user = new User("user");
     Quiz quiz = new Quiz("testQuiz.txt");
     quiz.moveNextQuestion();
     assertTrue(quiz.checkAnswer(user, "11"));
@@ -62,7 +62,7 @@ class QuizTest {
   @Test
   void wrongAnswerIsWrong() {
     createTestQuizFile();
-    User user = new User();
+    User user = new User("user");
     Quiz quiz = new Quiz("testQuiz.txt");
     quiz.moveNextQuestion();
     assertFalse(quiz.checkAnswer(user, "22"));
@@ -72,7 +72,7 @@ class QuizTest {
   @Test
   void userShouldGetScore() {
     createTestQuizFile();
-    User user = new User();
+    User user = new User("user");
     Quiz quiz = new Quiz("testQuiz.txt");
     quiz.moveNextQuestion();
     quiz.checkAnswer(user, "11");
@@ -83,7 +83,7 @@ class QuizTest {
   @Test
   void userShouldNotGetScore() {
     createTestQuizFile();
-    User user = new User();
+    User user = new User("user");
     Quiz quiz = new Quiz("testQuiz.txt");
     quiz.moveNextQuestion();
     quiz.checkAnswer(user, "22");

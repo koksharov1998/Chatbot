@@ -8,8 +8,8 @@ public class QuizReader {
 
   private String fileName;
 
-  public QuizReader(String fn) {
-    fileName = fn;
+  public QuizReader(String fileName) {
+    this.fileName = fileName;
   }
 
   public Pair[] readFromFile() {
