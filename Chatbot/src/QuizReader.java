@@ -1,4 +1,5 @@
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -40,6 +41,8 @@ public class QuizReader {
       }
       scan.close();
       fr.close();
+    } catch (IOException e) {
+      System.out.println(e.getMessage());
     } catch (Exception e) {
       System.out.println(e.getMessage());
     }

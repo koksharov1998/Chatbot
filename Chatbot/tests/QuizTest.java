@@ -22,8 +22,9 @@ class QuizTest {
   private void deleteTestQuizFile() {
     try {
       File file = new File("testQuiz.txt");
-      if (!file.delete())
+      if (!file.delete()) {
         throw new Exception("File didn't delete");
+      }
     } catch (Exception e) {
       System.out.println(e.getMessage());
     }
@@ -65,6 +66,28 @@ class QuizTest {
     Quiz quiz = new Quiz("testQuiz.txt");
     quiz.moveNextQuestion();
     assertFalse(quiz.checkAnswer(user, "22"));
+    deleteTestQuizFile();
+  }
+
+  @Test
+  void userShouldGetScore() {
+    createTestQuizFile();
+    User user = new User();
+    Quiz quiz = new Quiz("testQuiz.txt");
+    quiz.moveNextQuestion();
+    quiz.checkAnswer(user, "11");
+    assertEquals(1, user.getScore());
+    deleteTestQuizFile();
+  }
+
+  @Test
+  void userShouldNotGetScore() {
+    createTestQuizFile();
+    User user = new User();
+    Quiz quiz = new Quiz("testQuiz.txt");
+    quiz.moveNextQuestion();
+    quiz.checkAnswer(user, "22");
+    assertEquals(0, user.getScore());
     deleteTestQuizFile();
   }
 }
