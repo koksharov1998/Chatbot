@@ -1,6 +1,6 @@
 public class Quiz {
 
-  private int currentQuestionID = 0;
+  private int currentQuestionID = -1;
   private Pair[] quiz;
 
   public Quiz(String fileName) {
