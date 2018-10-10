@@ -1,6 +1,7 @@
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class QuizReader {
@@ -12,7 +13,7 @@ public class QuizReader {
   }
 
   public Pair[] readFromFile() {
-    ArrayList<Pair> text = new ArrayList<Pair>();
+    List<Pair> text = new ArrayList<Pair>();
     try {
       FileReader fr = new FileReader(fileName);
       Scanner scan = new Scanner(fr);
