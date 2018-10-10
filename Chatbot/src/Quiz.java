@@ -8,6 +8,10 @@ public class Quiz {
     quiz = qr.readFromFile();
   }
 
+  public Quiz(QuizReader qr) {
+
+  }
+
   public String getCurrentQuestion() {
     return quiz[currentQuestionID].getFirst();
   }
