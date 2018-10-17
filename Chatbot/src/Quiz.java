@@ -3,13 +3,17 @@ public class Quiz {
   private int currentQuestionID = -1;
   private Pair[] quiz;
 
-  public Quiz(String fileName) {
-    QuizReader qr = new QuizReader(fileName);
-    quiz = qr.readFromFile();
+  //public Quiz(String fileName) {
+  //  QuizReader qr = new QuizReader(fileName);
+  //  quiz = qr.readFromFile();
+  //}
+
+  public Quiz(Pair[] quiz) {
+    this.quiz = quiz;
   }
 
   public Quiz(QuizReader qr) {
-
+    quiz = qr.readFromStream();
   }
 
   public String getCurrentQuestion() {

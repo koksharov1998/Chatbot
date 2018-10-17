@@ -1,5 +1,5 @@
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -14,15 +14,20 @@ public class QuizReader {
     this.inputStream = inputStream;
   }
 
-  public QuizReader(String fileName) {
-    this.fileName = fileName;
+  public QuizReader(String string) {
+    InputStream stream = new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8));
+    this.inputStream = stream;
+  }
+
+  public Quiz getQuiz() {
+    return new Quiz(readFromStream());
   }
 
   public Pair[] readFromStream() {
     List<Pair> text = new ArrayList<Pair>();
     try {
-      Reader fr = new Reader(inputStream);
-      Scanner scan = new Scanner(fr);
+      Reader inputStreamReader = new InputStreamReader(inputStream);
+      Scanner scan = new Scanner(inputStreamReader);
       String questionPrefix = "Question: ";
       String answerPrefix = "Answer: ";
       String newAnswer = null;
@@ -46,7 +51,7 @@ public class QuizReader {
         }
       }
       scan.close();
-      fr.close();
+      inputStreamReader.close();
     } catch (IOException e) {
       System.out.println(e.getMessage());
     } catch (Exception e) {
