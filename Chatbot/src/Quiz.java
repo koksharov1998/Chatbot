@@ -3,11 +3,6 @@ public class Quiz {
   private int currentQuestionID = -1;
   private Pair[] quiz;
 
-  //public Quiz(String fileName) {
-  //  QuizReader qr = new QuizReader(fileName);
-  //  quiz = qr.readFromFile();
-  //}
-
   public Quiz(Pair[] quiz) {
     this.quiz = quiz;
   }

@@ -1,10 +1,15 @@
-/*import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
 
 class QuizTest {
@@ -31,9 +36,12 @@ class QuizTest {
   }
 
   @Test
-  void returnRightCurrentQuestion() {
+  void returnRightCurrentQuestionAndWorkWithFileInput() throws FileNotFoundException {
     createTestQuizFile();
-    Quiz quiz = new Quiz("testQuiz.txt");
+    File file = new File("testQuiz.txt");
+    FileInputStream fileInputStream = new FileInputStream(file);
+    QuizReader quizReader = new QuizReader(fileInputStream);
+    Quiz quiz = new Quiz(quizReader);
     quiz.moveNextQuestion();
     assertEquals("How many people go on the field from one football team?",
         quiz.getCurrentQuestion());
@@ -41,53 +49,69 @@ class QuizTest {
   }
 
   @Test
+  void returnRightCurrentQuestionAndWorkWithStringInput() {
+    String s = "Question: How many people go on the field from one football team?\nAnswer: 11";
+    InputStream stringInputStream = new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
+    QuizReader quizReader = new QuizReader(stringInputStream);
+    Quiz quiz = new Quiz(quizReader);
+    quiz.moveNextQuestion();
+    assertEquals("How many people go on the field from one football team?",
+        quiz.getCurrentQuestion());
+  }
+
+  @Test
   void containsOnlyOneQuestion() {
-    createTestQuizFile();
-    Quiz quiz = new Quiz("testQuiz.txt");
+    String s = "Question: How many people go on the field from one football team?\nAnswer: 11";
+    InputStream stringInputStream = new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
+    QuizReader quizReader = new QuizReader(stringInputStream);
+    Quiz quiz = new Quiz(quizReader);
     assertTrue(quiz.moveNextQuestion());
     assertFalse(quiz.moveNextQuestion());
-    deleteTestQuizFile();
   }
 
   @Test
   void rightAnswerIsRight() {
-    createTestQuizFile();
+    String s = "Question: How many people go on the field from one football team?\nAnswer: 11";
+    InputStream stringInputStream = new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
+    QuizReader quizReader = new QuizReader(stringInputStream);
+    Quiz quiz = new Quiz(quizReader);
     User user = new User("user");
-    Quiz quiz = new Quiz("testQuiz.txt");
     quiz.moveNextQuestion();
     assertTrue(quiz.checkAnswer(user, "11"));
-    deleteTestQuizFile();
   }
 
   @Test
   void wrongAnswerIsWrong() {
-    createTestQuizFile();
+    String s = "Question: How many people go on the field from one football team?\nAnswer: 11";
+    InputStream stringInputStream = new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
+    QuizReader quizReader = new QuizReader(stringInputStream);
+    Quiz quiz = new Quiz(quizReader);
     User user = new User("user");
-    Quiz quiz = new Quiz("testQuiz.txt");
     quiz.moveNextQuestion();
     assertFalse(quiz.checkAnswer(user, "22"));
-    deleteTestQuizFile();
   }
 
   @Test
   void userShouldGetScore() {
-    createTestQuizFile();
+    String s = "Question: How many people go on the field from one football team?\nAnswer: 11";
+    InputStream stringInputStream = new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
+    QuizReader quizReader = new QuizReader(stringInputStream);
+    Quiz quiz = new Quiz(quizReader);
     User user = new User("user");
-    Quiz quiz = new Quiz("testQuiz.txt");
     quiz.moveNextQuestion();
     quiz.checkAnswer(user, "11");
     assertEquals(1, user.getScore());
-    deleteTestQuizFile();
   }
 
   @Test
   void userShouldNotGetScore() {
-    createTestQuizFile();
+    String s = "Question: How many people go on the field from one football team?\nAnswer: 11";
+    InputStream stringInputStream = new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
+    QuizReader quizReader = new QuizReader(stringInputStream);
+    Quiz quiz = new Quiz(quizReader);
     User user = new User("user");
-    Quiz quiz = new Quiz("testQuiz.txt");
     quiz.moveNextQuestion();
     quiz.checkAnswer(user, "22");
     assertEquals(0, user.getScore());
-    deleteTestQuizFile();
   }
-}*/
+}
