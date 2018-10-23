@@ -41,12 +41,9 @@ public class Client {
             break;
           }
 
-          System.out.println("Client sent message & start waiting for data from server...");
-          if(ois.read() > 0)     {
-            System.out.println("reading...");
-            String in = ois.readUTF();
-            System.out.println(in);
-          }
+          System.out.println("Client sent message");
+          var a = ois.readUTF();
+          System.out.println(a);
         }
       }
       System.out.println("Closing connections & channels on clentSide - DONE.");

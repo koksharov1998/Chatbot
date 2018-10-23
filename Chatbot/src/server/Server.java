@@ -11,10 +11,7 @@ public class Server extends Thread
       Socket client = server.accept();
       System.out.print("Connection accepted.");
 
-      // канал записи в сокет
       DataOutputStream out = new DataOutputStream(client.getOutputStream());
-
-      // канал чтения из сокета
       DataInputStream in = new DataInputStream(client.getInputStream());
 
       while(!client.isClosed()){

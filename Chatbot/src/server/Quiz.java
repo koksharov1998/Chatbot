@@ -1,3 +1,5 @@
+package server;
+
 public class Quiz {
 
   private int currentQuestionID = -1;

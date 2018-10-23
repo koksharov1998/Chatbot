@@ -1,3 +1,5 @@
+package server;
+
 public class Pair {
 
   private String first;

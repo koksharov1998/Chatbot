@@ -1,3 +1,5 @@
+package client;
+
 import java.io.FileNotFoundException;
 
 public class Program {
