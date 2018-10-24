@@ -1,4 +1,4 @@
-package client;
+package commons;
 
 public class User {
 

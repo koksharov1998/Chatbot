@@ -10,7 +10,7 @@ import java.net.UnknownHostException;
 public class Client {
   public static void main(String[] args) throws InterruptedException {
 
-// запускаем подключение сокета по известным координатам и нициализируем приём сообщений с консоли клиента
+// запускаем подключение сокета по известным координатам и инициализируем приём сообщений с консоли клиента
     try(Socket socket = new Socket("localhost", 3345);
         BufferedReader br =new BufferedReader(new InputStreamReader(System.in));
         DataOutputStream oos = new DataOutputStream(socket.getOutputStream());
@@ -29,7 +29,7 @@ public class Client {
 // пишем данные с консоли в канал сокета для сервера
           oos.writeUTF(clientCommand);
           oos.flush();
-          System.out.println("Clien sent message " + clientCommand + " to server.");
+          System.out.println("Client sent message " + clientCommand + " to server.");
 
           if(clientCommand.equalsIgnoreCase("quit")){
             System.out.println("Client kill connections");
@@ -42,11 +42,11 @@ public class Client {
           }
 
           System.out.println("Client sent message");
-          var a = ois.readUTF();
+          String a = ois.readUTF();
           System.out.println(a);
         }
       }
-      System.out.println("Closing connections & channels on clentSide - DONE.");
+      System.out.println("Closing connections & channels on clientSide - DONE.");
 
     } catch (UnknownHostException e) {
       e.printStackTrace();

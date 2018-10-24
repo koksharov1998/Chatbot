@@ -1,5 +1,8 @@
 package server;
 
+import commons.Pair;
+import commons.User;
+
 public class Quiz {
 
   private int currentQuestionID = -1;

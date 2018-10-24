@@ -1,3 +1,5 @@
+package server;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -9,13 +11,13 @@ public class Server extends Thread
   public static void main(String[] args) throws InterruptedException {
     try (ServerSocket server= new ServerSocket(3345)){
       Socket client = server.accept();
-      System.out.print("Connection accepted.");
+      System.out.println("Connection accepted.");
 
       DataOutputStream out = new DataOutputStream(client.getOutputStream());
       DataInputStream in = new DataInputStream(client.getInputStream());
-
+// неблокирующий ввод вывод в самой джаве разные реализации брать новую.
       while(!client.isClosed()){
-        System.out.println("Server reading from channel");
+        System.out.println("Server reading from channel" + client.toString());
         String entry = in.readUTF();
 
         System.out.println("READ from client message - "+entry);
