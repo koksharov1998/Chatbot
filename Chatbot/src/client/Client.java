@@ -1,4 +1,5 @@
 package client;
+
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -8,23 +9,22 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class Client {
+
   public static void main(String[] args) throws InterruptedException {
 
 // запускаем подключение сокета по известным координатам и инициализируем приём сообщений с консоли клиента
-    try(Socket socket = new Socket("localhost", 3345);
-        BufferedReader br =new BufferedReader(new InputStreamReader(System.in));
+    try (Socket socket = new Socket("localhost", 3345);
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         DataOutputStream oos = new DataOutputStream(socket.getOutputStream());
-        DataInputStream ois = new DataInputStream(socket.getInputStream()) ) {
+        DataInputStream ois = new DataInputStream(socket.getInputStream())) {
 
       System.out.println("Client connected to socket.");
 
 // проверяем живой ли канал и работаем если живой
-      while(!socket.isOutputShutdown()){
-
-        //System.out.println("Client sent message");
+      while (!socket.isOutputShutdown()) {
 
 // ждём консоли клиента на предмет появления в ней данных
-        if(br.ready()){
+        if (br.ready()) {
           System.out.println("Client start writing in channel...");
           String clientCommand = br.readLine();
 
@@ -33,9 +33,9 @@ public class Client {
           oos.flush();
           System.out.println("Client sent message " + clientCommand + " to server.");
 
-          if(clientCommand.equalsIgnoreCase("quit")){
+          if (clientCommand.equalsIgnoreCase("quit")) {
             System.out.println("Client kill connections");
-            if(ois.read() > -1)     {
+            if (ois.read() > -1) {
               System.out.println("reading...");
               String in = ois.readUTF();
               System.out.println(in);
