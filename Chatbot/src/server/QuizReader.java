@@ -1,7 +1,6 @@
 package server;
 
-import javafx.util.Pair;
-
+import commons.Pair;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;

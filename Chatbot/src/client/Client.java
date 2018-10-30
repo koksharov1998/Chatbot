@@ -21,6 +21,8 @@ public class Client {
 // проверяем живой ли канал и работаем если живой
       while(!socket.isOutputShutdown()){
 
+        //System.out.println("Client sent message");
+
 // ждём консоли клиента на предмет появления в ней данных
         if(br.ready()){
           System.out.println("Client start writing in channel...");
