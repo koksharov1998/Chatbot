@@ -7,14 +7,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class Server extends Thread {
 
+  private static ServerSocket server;
+  private static BufferedReader br;
+  private static DataOutputStream out;
+  private static DataInputStream in;
+
   public static void main(String[] args) throws InterruptedException {
-    try (ServerSocket server = new ServerSocket(3345)) {
+    try {
       /*List<Socket> clients = new ArrayList<Socket>();
       Thread threadAddingClients = new Thread(() -> { //Тут лямбда выражение
         try {
@@ -30,12 +32,30 @@ public class Server extends Thread {
         TimeUnit.SECONDS.sleep(1);
       Socket client = clients.get(0);
       }*/
+
+      server = new ServerSocket(3345);
       Socket client = server.accept();
       System.out.println("Connection accepted with " + client);
 
       BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
       DataOutputStream out = new DataOutputStream(client.getOutputStream());
       DataInputStream in = new DataInputStream(client.getInputStream());
+
+      Thread threadWrite = new Thread(() -> {
+        try {
+          while (true) {
+            String input = br.readLine();
+            System.out.println(input);
+            out.writeUTF("Server send you new message: " + input);
+            out.flush();
+          }
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      });
+
+      threadWrite.start();
+
 
 // неблокирующий ввод вывод в самой джаве разные реализации брать новую.
       while (!client.isClosed()) {
@@ -52,16 +72,7 @@ public class Server extends Thread {
           out.flush();
           break;
         }
-        Thread thread1 = new Thread(() -> { //Тут лямбда выражение
-          try {
-            String input = br.readLine();
-            System.out.println(input);
-            out.writeUTF("Server send you new message: " + input);
-            out.flush();
-          } catch (IOException e) {
-            e.printStackTrace();
-          }
-        });
+
         //String input = br.readLine();
         out.writeUTF("Server reply - " + entry + " - OK");
         //out.writeUTF("Server send you new message: " + input);

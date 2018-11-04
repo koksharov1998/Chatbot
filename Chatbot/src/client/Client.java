@@ -20,6 +20,18 @@ public class Client {
 
       System.out.println("Client connected to socket.");
 
+      Thread threadRead = new Thread(() -> {
+        try {
+          while (true) {
+            String a = ois.readUTF();
+            System.out.println(a);
+          }
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      });
+      threadRead.start();
+
 // проверяем живой ли канал и работаем если живой
       while (!socket.isOutputShutdown()) {
 
@@ -42,17 +54,7 @@ public class Client {
             }
             break;
           }
-          Thread thread1 = new Thread(() -> { //Тут лямбда выражение
-            try {
-              String a = ois.readUTF();
-              System.out.println(a);
-            } catch (IOException e) {
-              e.printStackTrace();
-            }
-          });
           System.out.println("Client sent message");
-          //String a = ois.readUTF();
-          //System.out.println(a);
         }
       }
       System.out.println("Closing connections & channels on clientSide - DONE.");
