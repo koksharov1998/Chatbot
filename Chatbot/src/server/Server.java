@@ -1,8 +1,11 @@
 package server;
 
+import commons.User;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
@@ -37,10 +40,19 @@ public class Server extends Thread {
       Socket client = server.accept();
       System.out.println("Connection accepted with " + client);
 
-      BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-      DataOutputStream out = new DataOutputStream(client.getOutputStream());
-      DataInputStream in = new DataInputStream(client.getInputStream());
+      br = new BufferedReader(new InputStreamReader(System.in));
+      out = new DataOutputStream(client.getOutputStream());
+      in = new DataInputStream(client.getInputStream());
+      User user = new User("Mr.Dedok");
+      File file = new File("quiz.txt");
+      FileInputStream fileInputStream = new FileInputStream(file);
 
+      QuizReader quizReader = new QuizReader(fileInputStream);
+      Quiz quiz = new Quiz(quizReader);
+      quiz.moveNextQuestion();
+      send(quiz.getCurrentQuestion());
+
+/*
       Thread threadWrite = new Thread(() -> {
         try {
           while (true) {
@@ -54,9 +66,15 @@ public class Server extends Thread {
         }
       });
 
-      threadWrite.start();
+      threadWrite.start();*/
+      while (!client.isClosed()) {
+        System.out.println("Server reading from channel" + client.toString());
+        String entry = in.readUTF();
+        analiz(entry,user, quiz);
 
+      }
 
+      /*
 // неблокирующий ввод вывод в самой джаве разные реализации брать новую.
       while (!client.isClosed()) {
         System.out.println("Server reading from channel" + client.toString());
@@ -72,19 +90,15 @@ public class Server extends Thread {
           out.flush();
           break;
         }
-
-        //String input = br.readLine();
         out.writeUTF("Server reply - " + entry + " - OK");
-        //out.writeUTF("Server send you new message: " + input);
         System.out.println("Server Wrote message to client.");
-
 // освобождаем буфер сетевых сообщений (по умолчанию сообщение не сразу отправляется в сеть, а сначала накапливается в специальном буфере сообщений, размер которого определяется конкретными настройками в системе, а метод  - flush() отправляет сообщение не дожидаясь наполнения буфера согласно настройкам системы
         out.flush();
       }
 
       System.out.println("Client disconnected");
       System.out.println("Closing connections & channels.");
-
+*/
       in.close();
       out.close();
       client.close();
@@ -92,5 +106,41 @@ public class Server extends Thread {
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  private static void analiz(String input, User user, Quiz quiz){
+    switch (input) {
+      case "result":
+        send("Your score: " + user.getScore());
+        break;
+      case "repeat":
+        send(quiz.getCurrentQuestion());
+        break;
+      default:
+        quiz.checkAnswer(user, input);
+        if (!quiz.moveNextQuestion()) {
+          send("конец");
+        }
+        send(quiz.getCurrentQuestion());
+    }
+  }
+
+  public static void send(String string){
+    try {
+      out.writeUTF(string);
+      out.flush();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public static String read(){
+    try {
+      String a = in.readUTF();
+      return a;
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return "error";
   }
 }

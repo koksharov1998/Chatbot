@@ -10,16 +10,23 @@ import java.net.UnknownHostException;
 
 public class Client {
 
-  public static void main(String[] args) throws InterruptedException {
+  private static Socket socket;
+  private static BufferedReader br;
+  private static DataOutputStream oos;
+  private static DataInputStream ois;
+
+
+  public Client() {
 
 // запускаем подключение сокета по известным координатам и инициализируем приём сообщений с консоли клиента
-    try (Socket socket = new Socket("localhost", 3345);
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        DataOutputStream oos = new DataOutputStream(socket.getOutputStream());
-        DataInputStream ois = new DataInputStream(socket.getInputStream())) {
+    try {
+      socket = new Socket("localhost", 3345);
+      br = new BufferedReader(new InputStreamReader(System.in));
+      oos = new DataOutputStream(socket.getOutputStream());
+      ois = new DataInputStream(socket.getInputStream());
 
       System.out.println("Client connected to socket.");
-
+/*
       Thread threadRead = new Thread(() -> {
         try {
           while (true) {
@@ -58,11 +65,31 @@ public class Client {
         }
       }
       System.out.println("Closing connections & channels on clientSide - DONE.");
-
+*/
     } catch (UnknownHostException e) {
       e.printStackTrace();
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  public void send(String string) {
+    try {
+      oos.writeUTF(string);
+      oos.flush();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public String read() {
+    try {
+      String a = ois.readUTF();
+      System.out.println(a);
+      return a;
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return "error";
   }
 }
