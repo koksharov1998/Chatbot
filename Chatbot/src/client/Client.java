@@ -17,7 +17,7 @@ public class Client {
 
 
   public Client() {
-
+  
     try {
       socket = new Socket("localhost", 3345);
       br = new BufferedReader(new InputStreamReader(System.in));
@@ -33,12 +33,14 @@ public class Client {
     }
   }
 
-  public void send(String string) {
+  public boolean send(String string) {
     try {
       oos.writeUTF(string);
       oos.flush();
+      return true;
     } catch (Exception e) {
-      e.printStackTrace();
+      return false;
+      //e.printStackTrace();
     }
   }
 

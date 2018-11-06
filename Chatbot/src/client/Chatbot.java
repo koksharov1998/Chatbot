@@ -38,9 +38,7 @@ public class Chatbot {
         client.send(input);
         return false;
       default:
-        client.send(input);
-        break;
+        return client.send(input);
     }
-    return true;
   }
 }

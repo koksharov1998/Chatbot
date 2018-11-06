@@ -32,10 +32,8 @@ public class Quiz {
   public boolean checkAnswer(User user, String answer) {
     if (answer.equals(quiz[currentQuestionID].getSecond().toLowerCase())) {
       user.upScore();
-      Server.send("It's right!");
       return true;
     } else {
-      Server.send("It's wrong!");
       return false;
     }
   }

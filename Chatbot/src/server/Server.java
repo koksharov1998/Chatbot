@@ -13,30 +13,14 @@ import java.net.Socket;
 
 public class Server extends Thread {
 
+  private static final String help = "Command list:\nhelp -- shows command list\nrepeat -- repeat last question\nresult -- shows your score\nquit -- finishes our dialog";
   private static ServerSocket server;
   private static BufferedReader br;
   private static DataOutputStream out;
   private static DataInputStream in;
-  private static final String help = "Command list:\nhelp -- shows command list\nrepeat -- repeat last question\nresult -- shows your score\nquit -- finishes our dialog";
 
   public static void main(String[] args) throws InterruptedException {
     try {
-      /*List<Socket> clients = new ArrayList<Socket>();
-      Thread threadAddingClients = new Thread(() -> { //Тут лямбда выражение
-        try {
-          Socket client = server.accept();
-          clients.add(client);
-          System.out.println("Connection accepted with " + client);
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      });
-      threadAddingClients.start();
-      for (int i = 1; i < 20; i++) {
-        TimeUnit.SECONDS.sleep(1);
-      Socket client = clients.get(0);
-      }*/
-
       server = new ServerSocket(3345);
       Socket client = server.accept();
       System.out.println("Connection accepted with " + client);
@@ -60,53 +44,12 @@ public class Server extends Thread {
       quiz.moveNextQuestion();
       send(quiz.getCurrentQuestion());
 
-/*
-      Thread threadWrite = new Thread(() -> {
-        try {
-          while (true) {
-            String input = br.readLine();
-            System.out.println(input);
-            out.writeUTF("Server send you new message: " + input);
-            out.flush();
-          }
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      });
-
-      threadWrite.start();*/
       while (!client.isClosed()) {
         System.out.println("Server reading from channel" + client.toString());
         String entry = read();
         handle(entry, user, quiz);
-
       }
 
-      /*
-// неблокирующий ввод вывод в самой джаве разные реализации брать новую.
-      while (!client.isClosed()) {
-        System.out.println("Server reading from channel" + client.toString());
-        String entry = in.readUTF();
-
-        System.out.println("READ from client message - " + entry);
-        System.out.println("Server try writing to channel");
-
-// инициализация проверки условия продолжения работы с клиентом по этому сокету по кодовому слову - quit
-        if (entry.equalsIgnoreCase("quit")) {
-          System.out.println("Client initialize connections suicide ...");
-          out.writeUTF("Server reply - " + entry + " - OK");
-          out.flush();
-          break;
-        }
-        out.writeUTF("Server reply - " + entry + " - OK");
-        System.out.println("Server Wrote message to client.");
-// освобождаем буфер сетевых сообщений (по умолчанию сообщение не сразу отправляется в сеть, а сначала накапливается в специальном буфере сообщений, размер которого определяется конкретными настройками в системе, а метод  - flush() отправляет сообщение не дожидаясь наполнения буфера согласно настройкам системы
-        out.flush();
-      }
-
-      System.out.println("Client disconnected");
-      System.out.println("Closing connections & channels.");
-*/
       in.close();
       out.close();
       client.close();
@@ -116,7 +59,7 @@ public class Server extends Thread {
     }
   }
 
-  private static void handle(String input, User user, Quiz quiz){
+  private static void handle(String input, User user, Quiz quiz) {
     switch (input) {
       case "help":
         send(help);
@@ -132,15 +75,20 @@ public class Server extends Thread {
         send(quiz.getCurrentQuestion());
         break;
       default:
-        quiz.checkAnswer(user, input);
+        if (quiz.checkAnswer(user, input))
+          send("It's right!");
+        else
+          send("It's wrong!");
         if (!quiz.moveNextQuestion()) {
-          send("конец");
+          send("Your score: " + user.getScore());
+          send("Bye!");
+          send("quit");
         }
         send(quiz.getCurrentQuestion());
     }
   }
 
-  public static void send(String string){
+  public static void send(String string) {
     try {
       out.writeUTF(string);
       out.flush();
@@ -149,7 +97,7 @@ public class Server extends Thread {
     }
   }
 
-  public static String read(){
+  public static String read() {
     try {
       String a = in.readUTF();
       return a;
