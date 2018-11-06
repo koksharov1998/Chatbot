@@ -70,7 +70,7 @@ public class Server extends Thread {
       while (!client.isClosed()) {
         System.out.println("Server reading from channel" + client.toString());
         String entry = in.readUTF();
-        analiz(entry,user, quiz);
+        handle(entry,user, quiz);
 
       }
 
@@ -108,8 +108,11 @@ public class Server extends Thread {
     }
   }
 
-  private static void analiz(String input, User user, Quiz quiz){
+  private static void handle(String input, User user, Quiz quiz){
     switch (input) {
+      case "help":
+        send(writeHelp());
+        break;
       case "result":
         send("Your score: " + user.getScore());
         break;
@@ -141,6 +144,10 @@ public class Server extends Thread {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    return "error";
+    return "error server";
+  }
+
+  private static String writeHelp() {
+        return "Command list:\nhelp -- shows command list\nrepeat -- repeat last question\nresult -- shows your score\nquit -- finishes our dialog";
   }
 }

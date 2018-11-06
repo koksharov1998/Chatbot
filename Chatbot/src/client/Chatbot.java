@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class Chatbot {
 
-  private static Client client;
+  private Client client;
 
   public void start() {
     User user = new User("user");
@@ -17,7 +17,14 @@ public class Chatbot {
             + "!\nI'm java-chatbot. :)\nI can do some interesting things.");
     writeHelp();
     System.out.println("Now we can start quiz! Let's go!");
-    client.read();
+
+    Thread thread = new Thread(() -> {
+      while (true) {
+        System.out.println(client.read());
+      }
+    });
+    thread.start();
+
 
     String input = "";
     boolean loop = true;
@@ -33,12 +40,8 @@ public class Chatbot {
   private boolean handleInput(String input, User user) {
 
     switch (input) {
-      case "help":
-        writeHelp();
-        break;
       default:
         client.send(input);
-        System.out.println(client.read());
         break;
 
         /*

@@ -10,10 +10,10 @@ import java.net.UnknownHostException;
 
 public class Client {
 
-  private static Socket socket;
-  private static BufferedReader br;
-  private static DataOutputStream oos;
-  private static DataInputStream ois;
+  private Socket socket;
+  private BufferedReader br;
+  private DataOutputStream oos;
+  private DataInputStream ois;
 
 
   public Client() {
@@ -85,11 +85,10 @@ public class Client {
   public String read() {
     try {
       String a = ois.readUTF();
-      System.out.println(a);
       return a;
     } catch (IOException e) {
       e.printStackTrace();
     }
-    return "error";
+    return "error client";
   }
 }
