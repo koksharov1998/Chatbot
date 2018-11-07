@@ -15,17 +15,15 @@ public class Server extends Thread {
 
   private static final String help = "Command list:\nhelp -- shows command list\nrepeat -- repeat last question\nresult -- shows your score\nquit -- finishes our dialog";
   private static ServerSocket server;
-  private static BufferedReader br;
   private static DataOutputStream out;
   private static DataInputStream in;
 
   public static void main(String[] args) throws InterruptedException {
     try {
-      server = new ServerSocket(3345);
+      server = new ServerSocket(3348);
       Socket client = server.accept();
       System.out.println("Connection accepted with " + client);
 
-      br = new BufferedReader(new InputStreamReader(System.in));
       out = new DataOutputStream(client.getOutputStream());
       in = new DataInputStream(client.getInputStream());
       File file = new File("quiz.txt");
@@ -93,7 +91,7 @@ public class Server extends Thread {
       out.writeUTF(string);
       out.flush();
     } catch (Exception e) {
-      e.printStackTrace();
+      //e.printStackTrace();
     }
   }
 
@@ -102,7 +100,7 @@ public class Server extends Thread {
       String a = in.readUTF();
       return a;
     } catch (IOException e) {
-      e.printStackTrace();
+      //e.printStackTrace();
     }
     return "error server";
   }
