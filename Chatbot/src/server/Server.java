@@ -1,26 +1,22 @@
 package server;
 
-import client.MyRunnable;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Server extends Thread {
+public class Server {
 
   private static final String help = "Command list:\nhelp -- shows command list\nrepeat -- repeat last question\nresult -- shows your score\nquit -- finishes our dialog";
   private static ServerSocket server;
   private static List<Socket> clients = new ArrayList<Socket>();
-  private static DataOutputStream out;
-  private static DataInputStream in;
+  //private static DataOutputStream out;
+  //private static DataInputStream in;
 
-  public void main(String[] args) throws InterruptedException {
+  public static void main(String[] args) throws InterruptedException {
     try {
       server = new ServerSocket(3348);
 
@@ -28,7 +24,7 @@ public class Server extends Thread {
         final Socket client = server.accept();
         clients.add(client);
         System.out.println("Connection accepted with " + client);
-        Thread comWithClient = new Thread(new MyRunnable(this, client));
+        Thread comWithClient = new Thread(new MyRunnable(client));
         comWithClient.start();
       }
     }
@@ -87,6 +83,8 @@ public class Server extends Thread {
     }
   }
 */
+
+/*
   public static void handle(String input, User user, Quiz quiz) {
     switch (input) {
       case "help":
@@ -116,7 +114,8 @@ public class Server extends Thread {
         send(quiz.getCurrentQuestion());
     }
   }
-
+*/
+  /*
   public static void send(String string) {
     try {
       out.writeUTF(string);
@@ -135,4 +134,5 @@ public class Server extends Thread {
     }
     return "error server";
   }
+  */
 }
