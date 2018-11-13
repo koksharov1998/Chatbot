@@ -3,7 +3,7 @@ package client;
 public class Program {
 
   public static void main(String[] args) {
-    Chatbot chatbot = new Chatbot();
-    chatbot.start();
+    Client client = new Client();
+    client.start();
   }
 }

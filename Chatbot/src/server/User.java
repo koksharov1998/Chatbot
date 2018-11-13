@@ -1,7 +1,8 @@
-package commons;
+package server;
 
 public class User {
 
+  private int ID;
   private String name;
   private int score = 0;
 

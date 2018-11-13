@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-import commons.User;
+import server.User;
 import org.junit.jupiter.api.Test;
 import server.Quiz;
 import server.QuizReader;

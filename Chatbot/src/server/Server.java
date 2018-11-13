@@ -1,26 +1,56 @@
 package server;
 
-import commons.User;
-import java.io.BufferedReader;
+import client.MyRunnable;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Server extends Thread {
 
   private static final String help = "Command list:\nhelp -- shows command list\nrepeat -- repeat last question\nresult -- shows your score\nquit -- finishes our dialog";
   private static ServerSocket server;
+  private static List<Socket> clients = new ArrayList<Socket>();
   private static DataOutputStream out;
   private static DataInputStream in;
 
-  public static void main(String[] args) throws InterruptedException {
+  public void main(String[] args) throws InterruptedException {
     try {
       server = new ServerSocket(3348);
+
+      while (true) {
+        final Socket client = server.accept();
+        clients.add(client);
+        System.out.println("Connection accepted with " + client);
+        Thread comWithClient = new Thread(new MyRunnable(this, client));
+        comWithClient.start();
+      }
+    }
+    catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+      /*Thread threadAddingClients = new Thread(() -> {
+        while (true) {
+          try {
+            Socket client = server.accept();
+            clients.add(client);
+            System.out.println("Connection accepted with " + client);
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+        }
+      });
+      threadAddingClients.start();*/
+
+/*
       Socket client = server.accept();
       System.out.println("Connection accepted with " + client);
 
@@ -56,8 +86,8 @@ public class Server extends Thread {
       e.printStackTrace();
     }
   }
-
-  private static void handle(String input, User user, Quiz quiz) {
+*/
+  public static void handle(String input, User user, Quiz quiz) {
     switch (input) {
       case "help":
         send(help);
@@ -73,10 +103,11 @@ public class Server extends Thread {
         send(quiz.getCurrentQuestion());
         break;
       default:
-        if (quiz.checkAnswer(user, input))
+        if (quiz.checkAnswer(user, input)) {
           send("It's right!");
-        else
+        } else {
           send("It's wrong!");
+        }
         if (!quiz.moveNextQuestion()) {
           send("Your score: " + user.getScore());
           send("Bye!");

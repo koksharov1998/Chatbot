@@ -1,4 +1,4 @@
-package commons;
+package server;
 
 public class Pair {
 
