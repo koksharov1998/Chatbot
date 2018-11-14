@@ -5,10 +5,6 @@ public class Quiz {
   private int currentQuestionID = -1;
   private Pair[] quiz;
 
-  public Quiz(Pair[] quiz) {
-    this.quiz = quiz;
-  }
-
   public Quiz(QuizReader qr) {
     quiz = qr.readFromStream();
   }
