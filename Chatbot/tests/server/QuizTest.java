@@ -1,6 +1,8 @@
-/*import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+package server;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -11,17 +13,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-import server.User;
 import org.junit.jupiter.api.Test;
-import server.Quiz;
-import server.QuizReader;
+
 
 class QuizTest {
+
+  private final String answer = "Question: How many people go on the field from one football team?\nAnswer: 11";
 
   private void createTestQuizFile() {
     try {
       FileWriter fw = new FileWriter("testQuiz.txt", false);
-      fw.write("Question: How many people go on the field from one football team?\nAnswer: 11");
+      fw.write(answer);
       fw.close();
     } catch (IOException e) {
       System.out.println(e.getMessage());
@@ -49,13 +51,17 @@ class QuizTest {
     quiz.moveNextQuestion();
     assertEquals("How many people go on the field from one football team?",
         quiz.getCurrentQuestion());
+    User user = new User("name", 0);
+    assertFalse(quiz.checkAnswer(user,"10"));
+    assertEquals(user.getScore(),0);
+    assertTrue(quiz.checkAnswer(user,"11"));
+    assertEquals(user.getScore(),1);
     deleteTestQuizFile();
   }
 
   @Test
   void returnRightCurrentQuestionAndWorkWithStringInput() {
-    String s = "Question: How many people go on the field from one football team?\nAnswer: 11";
-    InputStream stringInputStream = new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
+    InputStream stringInputStream = new ByteArrayInputStream(answer.getBytes(StandardCharsets.UTF_8));
     QuizReader quizReader = new QuizReader(stringInputStream);
     Quiz quiz = new Quiz(quizReader);
     quiz.moveNextQuestion();
@@ -65,8 +71,7 @@ class QuizTest {
 
   @Test
   void containsOnlyOneQuestion() {
-    String s = "Question: How many people go on the field from one football team?\nAnswer: 11";
-    InputStream stringInputStream = new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
+    InputStream stringInputStream = new ByteArrayInputStream(answer.getBytes(StandardCharsets.UTF_8));
     QuizReader quizReader = new QuizReader(stringInputStream);
     Quiz quiz = new Quiz(quizReader);
     assertTrue(quiz.moveNextQuestion());
@@ -75,33 +80,30 @@ class QuizTest {
 
   @Test
   void rightAnswerIsRight() {
-    String s = "Question: How many people go on the field from one football team?\nAnswer: 11";
-    InputStream stringInputStream = new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
+    InputStream stringInputStream = new ByteArrayInputStream(answer.getBytes(StandardCharsets.UTF_8));
     QuizReader quizReader = new QuizReader(stringInputStream);
     Quiz quiz = new Quiz(quizReader);
-    User user = new User("user");
+    User user = new User("user",0);
     quiz.moveNextQuestion();
     assertTrue(quiz.checkAnswer(user, "11"));
   }
 
   @Test
   void wrongAnswerIsWrong() {
-    String s = "Question: How many people go on the field from one football team?\nAnswer: 11";
-    InputStream stringInputStream = new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
+    InputStream stringInputStream = new ByteArrayInputStream(answer.getBytes(StandardCharsets.UTF_8));
     QuizReader quizReader = new QuizReader(stringInputStream);
     Quiz quiz = new Quiz(quizReader);
-    User user = new User("user");
+    User user = new User("user",0);
     quiz.moveNextQuestion();
     assertFalse(quiz.checkAnswer(user, "22"));
   }
 
   @Test
   void userShouldGetScore() {
-    String s = "Question: How many people go on the field from one football team?\nAnswer: 11";
-    InputStream stringInputStream = new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
+    InputStream stringInputStream = new ByteArrayInputStream(answer.getBytes(StandardCharsets.UTF_8));
     QuizReader quizReader = new QuizReader(stringInputStream);
     Quiz quiz = new Quiz(quizReader);
-    User user = new User("user");
+    User user = new User("user",0);
     quiz.moveNextQuestion();
     quiz.checkAnswer(user, "11");
     assertEquals(1, user.getScore());
@@ -109,13 +111,12 @@ class QuizTest {
 
   @Test
   void userShouldNotGetScore() {
-    String s = "Question: How many people go on the field from one football team?\nAnswer: 11";
-    InputStream stringInputStream = new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
+    InputStream stringInputStream = new ByteArrayInputStream(answer.getBytes(StandardCharsets.UTF_8));
     QuizReader quizReader = new QuizReader(stringInputStream);
     Quiz quiz = new Quiz(quizReader);
-    User user = new User("user");
+    User user = new User("user",0);
     quiz.moveNextQuestion();
     quiz.checkAnswer(user, "22");
     assertEquals(0, user.getScore());
   }
-}*/
+}
