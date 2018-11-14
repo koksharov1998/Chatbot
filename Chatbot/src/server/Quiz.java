@@ -6,7 +6,11 @@ public class Quiz {
   private Pair[] quiz;
 
   public Quiz(QuizReader qr) {
-    quiz = qr.readFromStream();
+    try {
+      quiz = qr.readFromStream();
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
   }
 
   public String getCurrentQuestion() {

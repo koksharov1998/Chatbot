@@ -11,6 +11,7 @@ public class QuizReaderTest {
 
   @Test
   void returnRightInputStreamAndWorkWithRightFile() {
+    try{
     String answer = "Question: How many people go on the field from one football team?\nAnswer: 11";
     InputStream stringInputStream = new ByteArrayInputStream(
         answer.getBytes(StandardCharsets.UTF_8));
@@ -20,6 +21,9 @@ public class QuizReaderTest {
         "How many people go on the field from one football team?");
     assertEquals(stream[0].getSecond(),
         "11");
+  } catch (Exception e) {
+    System.out.println(e.getMessage());
+  }
   }
 
   @Test

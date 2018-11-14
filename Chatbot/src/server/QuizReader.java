@@ -16,7 +16,7 @@ public class QuizReader {
     this.inputStream = inputStream;
   }
 
-  public Pair[] readFromStream() {
+  public Pair[] readFromStream() throws Exception {
     List<Pair> text = new ArrayList<Pair>();
     try {
       Reader inputStreamReader = new InputStreamReader(inputStream);
@@ -46,8 +46,6 @@ public class QuizReader {
       scan.close();
       inputStreamReader.close();
     } catch (IOException e) {
-      System.out.println(e.getMessage());
-    } catch (Exception e) {
       System.out.println(e.getMessage());
     }
     return text.toArray(new Pair[text.size()]);
