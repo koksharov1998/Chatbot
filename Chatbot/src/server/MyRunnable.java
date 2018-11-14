@@ -11,11 +11,13 @@ public class MyRunnable implements Runnable {
 
   private static final String help = "Command list:\nhelp -- shows command list\nrepeat -- repeat last question\nresult -- shows your score\nquit -- finishes our dialog";
   private Socket client;
+  private int ID;
   private DataOutputStream out;
   private DataInputStream in;
 
-  public MyRunnable(Socket client) {
+  public MyRunnable(Socket client, int ID) {
     this.client = client;
+    this.ID = ID;
   }
 
   public void run() {
@@ -26,11 +28,11 @@ public class MyRunnable implements Runnable {
       File file = new File("quiz.txt");
       FileInputStream fileInputStream = new FileInputStream(file);
       QuizReader quizReader = new QuizReader(fileInputStream);
-      fileInputStream.close();
       Quiz quiz = new Quiz(quizReader);
+      fileInputStream.close();
       send("Hello, dear user! What is your name?");
       String name = read();
-      User user = new User(name);
+      User user = new User(name, ID);
       send(user.getName() + "!\nI'm java-chatbot. :)\nI can do some interesting things.");
       send(help);
       send("Now we can start quiz! Let's go!");
@@ -50,7 +52,7 @@ public class MyRunnable implements Runnable {
     }
   }
 
-  private void handle(String input, User user, Quiz quiz) {
+  private void handle(String input, User user, Quiz quiz) throws IOException {
     switch (input) {
       case "help":
         send(help);
@@ -59,6 +61,8 @@ public class MyRunnable implements Runnable {
         send("Your score: " + user.getScore());
         send("Bye!");
         send("quit");
+        client.close();
+        break;
       case "result":
         send("Your score: " + user.getScore());
         break;
@@ -75,8 +79,11 @@ public class MyRunnable implements Runnable {
           send("Your score: " + user.getScore());
           send("Bye!");
           send("quit");
+          client.close();
         }
-        send(quiz.getCurrentQuestion());
+        else {
+          send(quiz.getCurrentQuestion());
+        }
     }
   }
 

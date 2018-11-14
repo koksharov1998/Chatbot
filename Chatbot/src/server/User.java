@@ -6,8 +6,9 @@ public class User {
   private String name;
   private int score = 0;
 
-  public User(String name) {
+  public User(String name, int ID) {
     this.name = name;
+    this.ID = ID;
   }
 
   public String getName() {

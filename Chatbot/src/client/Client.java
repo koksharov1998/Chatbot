@@ -11,6 +11,7 @@ public class Client {
   private Socket socket;
   private DataOutputStream oos;
   private DataInputStream ois;
+  private boolean isAlive = true;
 
   public Client() {
     try {
@@ -46,7 +47,6 @@ public class Client {
   public void start() {
     Scanner scanner = new Scanner(System.in);
     Thread readingThread = new Thread(() -> {
-      boolean isAlive = true;
       while (isAlive) {
         String input = read();
         if (input.equals("quit")) {
@@ -59,7 +59,7 @@ public class Client {
     readingThread.start();
     String input = "";
     boolean loop = true;
-    while (loop) {
+    while (loop && isAlive) {
       input = scanner.nextLine().toLowerCase();
       loop = handleInput(input);
     }
