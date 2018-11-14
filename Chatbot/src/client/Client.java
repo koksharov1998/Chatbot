@@ -4,7 +4,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.Scanner;
 
 public class Client {
@@ -13,24 +12,18 @@ public class Client {
   private DataOutputStream oos;
   private DataInputStream ois;
 
-
   public Client() {
-
     try {
       socket = new Socket("localhost", 3348);
       oos = new DataOutputStream(socket.getOutputStream());
       ois = new DataInputStream(socket.getInputStream());
-
       System.out.println("Client connected to socket.");
-
-    } catch (UnknownHostException e) {
-      e.printStackTrace();
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
-  public boolean send(String string) {
+  private boolean send(String string) {
     try {
       oos.writeUTF(string);
       oos.flush();
@@ -41,20 +34,17 @@ public class Client {
     }
   }
 
-  public String read() {
+  private String read() {
     try {
-      String a = ois.readUTF();
-      return a;
+      return ois.readUTF();
     } catch (IOException e) {
       e.printStackTrace();
     }
     return "error client";
   }
 
-
   public void start() {
     Scanner scanner = new Scanner(System.in);
-
     Thread readingThread = new Thread(() -> {
       boolean isAlive = true;
       while (isAlive) {
@@ -67,7 +57,6 @@ public class Client {
       }
     });
     readingThread.start();
-
     String input = "";
     boolean loop = true;
     while (loop) {
