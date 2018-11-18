@@ -80,8 +80,7 @@ public class MyRunnable implements Runnable {
           send("Bye!");
           send("quit");
           client.close();
-        }
-        else {
+        } else {
           send(quiz.getCurrentQuestion());
         }
     }
