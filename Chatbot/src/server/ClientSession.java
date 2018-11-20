@@ -7,7 +7,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-public class MyRunnable implements Runnable {
+public class ClientSession implements Runnable {
 
   private static final String help = "Command list:\nhelp -- shows command list\nrepeat -- repeat last question\nresult -- shows your score\nquit -- finishes our dialog";
   private Socket client;
@@ -15,11 +15,12 @@ public class MyRunnable implements Runnable {
   private DataOutputStream out;
   private DataInputStream in;
 
-  public MyRunnable(Socket client, int ID) {
+  public ClientSession(Socket client, int ID) {
     this.client = client;
     this.ID = ID;
   }
 
+  @Override
   public void run() {
     System.out.println("Connection accepted with " + client);
     try {
@@ -87,20 +88,28 @@ public class MyRunnable implements Runnable {
   }
 
   private void send(String string) {
-    try {
-      out.writeUTF(string);
-      out.flush();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+      try {
+        try {
+          out.writeUTF(string);
+          out.flush();
+        } catch (IOException e) {
+          client.close();
+        }
+      } catch (IOException e) {
+        System.exit(-1);
+      }
   }
 
   private String read() {
     try {
-      return in.readUTF();
+      try {
+        return in.readUTF();
+      } catch (IOException e) {
+        client.close();
+      }
     } catch (IOException e) {
-      e.printStackTrace();
+      System.exit(-1);
     }
-    return "error server";
+    return "quit";
   }
 }

@@ -24,37 +24,30 @@ public class Client {
     }
   }
 
-  private boolean send(String string) {
-    try {
-      oos.writeUTF(string);
-      oos.flush();
-      return true;
-    } catch (Exception e) {
-      e.printStackTrace();
-      return false;
-    }
+  private void send(String string) throws IOException {
+    oos.writeUTF(string);
+    oos.flush();
   }
 
-  private String read() {
+  private String read(){
     try {
       return ois.readUTF();
-    } catch (IOException e) {
-      e.printStackTrace();
+    }catch (IOException e){
+      return "quit";
     }
-    return "error client";
   }
 
   public void start() {
     Scanner scanner = new Scanner(System.in);
     Thread readingThread = new Thread(() -> {
       while (isAlive) {
-        String input = read();
-        if (input.equals("quit")) {
-          isAlive = false;
-        } else {
-          System.out.println(input);
+          String input = read();
+          if (input.equals("quit")) {
+            isAlive = false;
+          } else {
+            System.out.println(input);
+          }
         }
-      }
     });
     readingThread.start();
     String input = "";
@@ -67,12 +60,18 @@ public class Client {
   }
 
   private boolean handleInput(String input) {
-    switch (input) {
-      case "quit":
-        send(input);
-        return false;
-      default:
-        return send(input);
+    try {
+      switch (input) {
+        case "quit":
+          send(input);
+          return false;
+        default:
+          send(input);
+          return true;
+      }
+    } catch (IOException e) {
+      System.out.println("Client disconnected to socket."+socket.toString());
+      return false;
     }
   }
 }
