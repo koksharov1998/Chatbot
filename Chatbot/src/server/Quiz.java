@@ -19,11 +19,7 @@ public class Quiz {
 
   public boolean moveNextQuestion() {
     currentQuestionID++;
-    if (currentQuestionID < quiz.length) {
-      return true;
-    } else {
-      return false;
-    }
+    return currentQuestionID < quiz.length;
   }
 
   public boolean checkAnswer(User user, String answer) {

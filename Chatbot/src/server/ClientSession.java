@@ -87,28 +87,20 @@ public class ClientSession implements Runnable {
     }
   }
 
-  private void send(String string) {
-      try {
-        try {
-          out.writeUTF(string);
-          out.flush();
-        } catch (IOException e) {
-          client.close();
-        }
-      } catch (IOException e) {
-        System.exit(-1);
-      }
+  private void send(String string) throws IOException {
+    try {
+      out.writeUTF(string);
+      out.flush();
+    } catch (IOException e) {
+      client.close();
+    }
   }
 
-  private String read() {
+  private String read() throws IOException {
     try {
-      try {
-        return in.readUTF();
-      } catch (IOException e) {
-        client.close();
-      }
+      return in.readUTF();
     } catch (IOException e) {
-      System.exit(-1);
+      client.close();
     }
     return "quit";
   }
