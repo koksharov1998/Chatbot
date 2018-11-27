@@ -11,6 +11,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import wiki.WikiApi;
 
 
 public class Bot extends TelegramLongPollingBot {
@@ -47,7 +48,9 @@ public class Bot extends TelegramLongPollingBot {
         sendMsg(chatId, "Hello, dear user! What is your name?");
         break;
       case "/startwiki":
+        String w = WikiApi.getWikiInformation("London");
         sendMsg(chatId, "What do you want to find on Wikipedia?");
+        sendMsg(chatId, w);
         break;
       default:
         sendMsg(chatId, "Я тебя не понимаю. Попробуй команду /help");
