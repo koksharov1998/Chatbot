@@ -15,7 +15,7 @@ public class Client {
 
   public Client() {
     try {
-      socket = new Socket("10.96.5.170", 3348);
+      socket = new Socket("localhost", 3348);
       oos = new DataOutputStream(socket.getOutputStream());
       ois = new DataInputStream(socket.getInputStream());
       System.out.println("Client connected to socket.");
