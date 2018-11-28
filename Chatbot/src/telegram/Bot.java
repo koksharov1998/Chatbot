@@ -19,6 +19,7 @@ public class Bot extends TelegramLongPollingBot {
   private static final String help = "Command list:\n/help -- shows command list\n/startQuiz -- starts quiz\n/startwiki -- finds on Wikipedia";
   private static String botName;
   private static String token;
+  private static int status = 0;
 
   public Bot(String botName, String token, DefaultBotOptions options) {
     super(options);
@@ -40,17 +41,24 @@ public class Bot extends TelegramLongPollingBot {
 
   private void handle(String chatId, Message input) {
     String s = input.getText().toLowerCase();
+    if (status == 1){
+      String w = WikiApi.getWikiInformation(s);
+      sendMsg(chatId, w);
+      sendMsg(chatId, "If you want to find something, you need to repeat a command /startWiki");
+      status = 0;
+      return;
+    }
     switch (s) {
       case "/help":
         sendMsg(chatId, help);
         break;
       case "/startquiz":
+        status = 2;
         sendMsg(chatId, "Hello, dear user! What is your name?");
         break;
       case "/startwiki":
-        String w = WikiApi.getWikiInformation("London");
+        status = 1;
         sendMsg(chatId, "What do you want to find on Wikipedia?");
-        sendMsg(chatId, w);
         break;
       default:
         sendMsg(chatId, "Я тебя не понимаю. Попробуй команду /help");

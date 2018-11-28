@@ -8,6 +8,7 @@ import java.net.URL;
 public class WikiApi {
 
   public static String getWikiInformation(String request) {
+
     request = request.replace(" ", "_");
     String query = "https://en.wikipedia.org/w/api.php?action=opensearch&search=" + request
         + "&limit=1&format=json";
