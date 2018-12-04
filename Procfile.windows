@@ -1,1 +1,1 @@
-web: java my_bot.py
+web: java src/java/telegram/main.java
