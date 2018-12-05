@@ -111,7 +111,7 @@ public class Bot extends TelegramLongPollingBot {
       case "quit":
         sendMsg(chatId, "Your score: " + user.getScore());
         sendMsg(chatId, "Bye!");
-        sendMsg(chatId, "quit");
+        //sendMsg(chatId, "quit");
         status = 0;
         break;
       case "result":
@@ -129,7 +129,7 @@ public class Bot extends TelegramLongPollingBot {
         if (!quiz.moveNextQuestion()) {
           sendMsg(chatId, "Your score: " + user.getScore());
           sendMsg(chatId, "Bye!");
-          sendMsg(chatId, "quit");
+          //sendMsg(chatId, "quit");
           status = 0;
         } else {
           sendMsg(chatId, quiz.getCurrentQuestion());
