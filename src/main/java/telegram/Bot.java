@@ -99,7 +99,7 @@ public class Bot extends TelegramLongPollingBot {
           }
           break;
         }
-        sendMsg(chatId, "Я тебя не понимаю. Попробуй команду /help");
+        sendMsg(chatId, "I don't understand you. Try to use command /help");
     }
   }
 
