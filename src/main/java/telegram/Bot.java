@@ -28,8 +28,8 @@ public class Bot extends TelegramLongPollingBot {
   private static final String helpQuiz = "Command list:\nhelp -- shows command list\nrepeat -- repeat last question\nresult -- shows your score\nquit -- finishes our dialog";
   private static String botName;
   private static String token;
-  private Quiz quiz;
-  private Map<String, User> users = new HashMap<String, User>();
+  private Map<String, User> users = new HashMap<>();
+  private Map<User, Quiz> quizes = new HashMap<>();
 
   public Bot(String botName, String token, DefaultBotOptions options) {
     super(options);
@@ -46,8 +46,9 @@ public class Bot extends TelegramLongPollingBot {
     Message message = update.getMessage();
     if (message != null && message.hasText()) {
       String chatId = update.getMessage().getChatId().toString();
-      if (!users.containsKey(chatId))
+      if (!users.containsKey(chatId)) {
         users.put(chatId, new User(chatId, users.size()));
+      }
       handle(chatId, message);
     }
   }
@@ -65,6 +66,10 @@ public class Bot extends TelegramLongPollingBot {
       case "/help":
         sendMsg(chatId, help);
         break;
+      case "/startwiki":
+        users.get(chatId).setStatus(1);
+        sendMsg(chatId, "What do you want to find on Wikipedia?");
+        break;
       case "/startquiz":
         users.get(chatId).setStatus(2);
         File file = new File("quiz.txt");
@@ -72,30 +77,24 @@ public class Bot extends TelegramLongPollingBot {
         try {
           fileInputStream = new FileInputStream(file);
           QuizReader quizReader = new QuizReader(fileInputStream);
-          quiz = new Quiz(quizReader);
+          quizes.put(users.get(chatId), new Quiz(quizReader));
           fileInputStream.close();
         } catch (IOException e) {
           e.printStackTrace();
         }
         sendMsg(chatId, "Hello, dear user!");
-        break;
-      case "/startwiki":
-        users.get(chatId).setStatus(1);
-        sendMsg(chatId, "What do you want to find on Wikipedia?");
-        break;
       default:
         if (users.get(chatId).getStatus() == 2) {
           users.get(chatId).setStatus(3);
-          sendMsg(chatId,"I'm java-chatbot. :)\nI can do some interesting things.");
           sendMsg(chatId, helpQuiz);
           sendMsg(chatId, "Now we can start quiz! Let's go!");
-          quiz.moveNextQuestion();
-          sendMsg(chatId, quiz.getCurrentQuestion());
+          quizes.get(users.get(chatId)).moveNextQuestion();
+          sendMsg(chatId, quizes.get(users.get(chatId)).getCurrentQuestion());
           break;
         }
         if (users.get(chatId).getStatus() == 3) {
           try {
-            handle(s, users.get(chatId), quiz, chatId);
+            handle(s, users.get(chatId), quizes.get(users.get(chatId)), chatId);
           } catch (IOException e) {
             e.printStackTrace();
           }

@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.List;
+import org.json.JSONArray;
 
 public class WikiApi {
 
@@ -28,9 +28,9 @@ public class WikiApi {
         String line;
         while ((line = in.readLine()) != null) {
           System.out.println(line);
-          Pattern p = Pattern.compile(",[\"(.+)\",\"(.+)\"],\"(.+\")");
-          Matcher m = p.matcher(line);
-          System.out.println(m.group(1));
+          JSONArray array = new JSONArray(line);
+          List l = array.toList();
+          System.out.println(l.get(2));
 
           sm.append(line);
           sm.append("\n");
