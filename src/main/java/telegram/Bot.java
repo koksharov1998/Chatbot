@@ -138,7 +138,7 @@ public class Bot extends TelegramLongPollingBot {
 
   public synchronized void sendMsg(String chatId, String s) {
     SendMessage sendMessage = new SendMessage();
-    sendMessage.enableMarkdown(true);
+    sendMessage.enableHtml(true);
     sendMessage.setChatId(chatId);
     sendMessage.setText(s);
     setButtons(sendMessage);
