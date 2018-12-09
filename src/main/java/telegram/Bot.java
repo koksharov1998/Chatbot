@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -26,9 +28,8 @@ public class Bot extends TelegramLongPollingBot {
   private static final String helpQuiz = "Command list:\nhelp -- shows command list\nrepeat -- repeat last question\nresult -- shows your score\nquit -- finishes our dialog";
   private static String botName;
   private static String token;
-  private static int status = 0;
-  private static Quiz quiz;
-  private static User user;
+  private Quiz quiz;
+  private Map<String, User> users = new HashMap<String, User>();
 
   public Bot(String botName, String token, DefaultBotOptions options) {
     super(options);
@@ -44,17 +45,20 @@ public class Bot extends TelegramLongPollingBot {
   public void onUpdateReceived(Update update) {
     Message message = update.getMessage();
     if (message != null && message.hasText()) {
-      handle(update.getMessage().getChatId().toString(), message);
+      String chatId = update.getMessage().getChatId().toString();
+      if (!users.containsKey(chatId))
+        users.put(chatId, new User(chatId, users.size()));
+      handle(chatId, message);
     }
   }
 
   private void handle(String chatId, Message input) {
     String s = input.getText().toLowerCase();
-    if (status == 1) {
+    if (users.get(chatId).getStatus() == 1) {
       String w = WikiApi.getWikiInformation(s);
       sendMsg(chatId, w);
       sendMsg(chatId, "If you want to find something, you need to repeat a command /startWiki");
-      status = 0;
+      users.get(chatId).setStatus(0);
       return;
     }
     switch (s) {
@@ -62,7 +66,7 @@ public class Bot extends TelegramLongPollingBot {
         sendMsg(chatId, help);
         break;
       case "/startquiz":
-        status = 2;
+        users.get(chatId).setStatus(2);
         File file = new File("quiz.txt");
         FileInputStream fileInputStream = null;
         try {
@@ -73,27 +77,25 @@ public class Bot extends TelegramLongPollingBot {
         } catch (IOException e) {
           e.printStackTrace();
         }
-        sendMsg(chatId, "Hello, dear user! What is your name?");
+        sendMsg(chatId, "Hello, dear user!");
         break;
       case "/startwiki":
-        status = 1;
+        users.get(chatId).setStatus(1);
         sendMsg(chatId, "What do you want to find on Wikipedia?");
         break;
       default:
-        if (status == 2) {
-          status = 3;
-          user = new User(s, 1);
-          sendMsg(chatId,
-              user.getName() + "!\nI'm java-chatbot. :)\nI can do some interesting things.");
+        if (users.get(chatId).getStatus() == 2) {
+          users.get(chatId).setStatus(3);
+          sendMsg(chatId,"I'm java-chatbot. :)\nI can do some interesting things.");
           sendMsg(chatId, helpQuiz);
           sendMsg(chatId, "Now we can start quiz! Let's go!");
           quiz.moveNextQuestion();
           sendMsg(chatId, quiz.getCurrentQuestion());
           break;
         }
-        if (status == 3) {
+        if (users.get(chatId).getStatus() == 3) {
           try {
-            handle(s, user, quiz, chatId);
+            handle(s, users.get(chatId), quiz, chatId);
           } catch (IOException e) {
             e.printStackTrace();
           }
@@ -111,8 +113,7 @@ public class Bot extends TelegramLongPollingBot {
       case "quit":
         sendMsg(chatId, "Your score: " + user.getScore());
         sendMsg(chatId, "Bye!");
-        //sendMsg(chatId, "quit");
-        status = 0;
+        user.setStatus(0);
         break;
       case "result":
         sendMsg(chatId, "Your score: " + user.getScore());
@@ -129,8 +130,7 @@ public class Bot extends TelegramLongPollingBot {
         if (!quiz.moveNextQuestion()) {
           sendMsg(chatId, "Your score: " + user.getScore());
           sendMsg(chatId, "Bye!");
-          //sendMsg(chatId, "quit");
-          status = 0;
+          user.setStatus(0);
         } else {
           sendMsg(chatId, quiz.getCurrentQuestion());
         }
