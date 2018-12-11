@@ -319,11 +319,11 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Application.Server" />
-      <item itemvalue="Application.Program" />
       <item itemvalue="Application.Main (1)" />
-      <item itemvalue="JUnit.QuizTest" />
+      <item itemvalue="Application.Program" />
+      <item itemvalue="Application.Server" />
       <item itemvalue="JUnit.All in Chatbot" />
+      <item itemvalue="JUnit.QuizTest" />
     </list>
     <recent_temporary>
       <list>
