@@ -28,6 +28,9 @@ public class User {
     return score;
   }
 
+  public void setScore(int score) {
+    this.score = score;
+  }
   public void upScore() {
     score++;
   }

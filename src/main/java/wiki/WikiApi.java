@@ -31,13 +31,14 @@ public class WikiApi {
         BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         String line;
         while ((line = in.readLine()) != null) {
-          DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+          DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance()
+              .newDocumentBuilder();
           Document document = documentBuilder.parse(new ByteArrayInputStream(line.getBytes()));
           NodeList nodeList = document.getElementsByTagName("Item");
           Element element = (Element) nodeList.item(0);
-          String name = "<b>" + getTagValue("Text",element) + "</b>";
-          String inf = "<i>" + getTagValue("Description",element) + "</i>";
-          String ref = "<a href=\"" + getTagValue("Url",element) + "\"> Источник</a>";
+          String name = "<b>" + getTagValue("Text", element) + "</b>";
+          String inf = "<i>" + getTagValue("Description", element) + "</i>";
+          String ref = "<a href=\"" + getTagValue("Url", element) + "\"> Источник</a>";
           sm.append(name);
           sm.append("\n");
           sm.append(inf);
@@ -45,6 +46,7 @@ public class WikiApi {
           sm.append(ref);
           sm.append("\n");
         }
+        System.out.println(sm.toString());
         return sm.toString();
       }
     } catch (Throwable cause) {

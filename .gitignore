@@ -1,9 +1,4 @@
-*.idea
-*.class
-bin
-out
-*.class
+.idea/
 *.xml
-/.idea/workspace.xml
-/.idea/Chatbot.iml
-/.idea/workspace.xml
+target/
+*.class
