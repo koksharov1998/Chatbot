@@ -58,7 +58,7 @@ public class Bot extends TelegramLongPollingBot {
     String s = input.getText().toLowerCase();
     if (users.get(chatId).getStatus() == 1) {
       if (s.equals("/help")) {
-        sendMsgFromWiki(chatId, helpWiki);
+        sendMsg(chatId, helpWiki);
         return;
       }
       if (s.equals("/quit")) {
@@ -67,18 +67,14 @@ public class Bot extends TelegramLongPollingBot {
         sendMsg(chatId, help);
         return;
       }
+      users.get(chatId).setStatus(0);
       String w = WikiApi.getWikiInformation(s);
       sendMsg(chatId, w);
       sendMsg(chatId, "If you want to find something, you need to repeat a command /startWiki");
-      users.get(chatId).setStatus(0);
       return;
     }
     if (users.get(chatId).getStatus() == 2) {
-      try {
-        handleQuiz(s, users.get(chatId), quizes.get(users.get(chatId)), chatId);
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
+      handleQuiz(s, users.get(chatId));
       return;
     }
     switch (s) {
@@ -87,7 +83,7 @@ public class Bot extends TelegramLongPollingBot {
         break;
       case "/startwiki":
         users.get(chatId).setStatus(1);
-        sendMsgFromWiki(chatId, "What do you want to find on Wikipedia?");
+        sendMsg(chatId, "What do you want to find on Wikipedia?");
         break;
       case "/startquiz":
         users.get(chatId).setStatus(2);
@@ -101,46 +97,48 @@ public class Bot extends TelegramLongPollingBot {
         } catch (IOException e) {
           e.printStackTrace();
         }
-        sendMsgFromQuiz(chatId, "Hello, dear user!");
-        sendMsgFromQuiz(chatId, helpQuiz);
-        sendMsgFromQuiz(chatId, "Now we can start quiz! Let's go!");
+        sendMsg(chatId, "Hello, dear user!");
+        sendMsg(chatId, helpQuiz);
+        sendMsg(chatId, "Now we can start quiz! Let's go!");
         users.get(chatId).setScore(0);
         quizes.get(users.get(chatId)).moveNextQuestion();
-        sendMsgFromQuiz(chatId, quizes.get(users.get(chatId)).getCurrentQuestion());
+        sendMsg(chatId, quizes.get(users.get(chatId)).getCurrentQuestion());
         break;
       default:
         sendMsg(chatId, "I don't understand you. Try to use command /help");
     }
   }
 
-  private void handleQuiz(String input, User user, Quiz quiz, String chatId) throws IOException {
+  private void handleQuiz(String input, User user) {
+    String chatId = user.getName();
+    Quiz quiz = quizes.get(user);
     switch (input) {
       case "/help":
-        sendMsgFromQuiz(chatId, helpQuiz);
+        sendMsg(chatId, helpQuiz);
         break;
       case "/quit":
+        user.setStatus(0);
         sendMsg(chatId, "Your score: " + user.getScore());
         sendMsg(chatId, "Bye!");
-        user.setStatus(0);
         break;
       case "/result":
-        sendMsgFromQuiz(chatId, "Your score: " + user.getScore());
+        sendMsg(chatId, "Your score: " + user.getScore());
         break;
       case "/repeat":
-        sendMsgFromQuiz(chatId, quiz.getCurrentQuestion());
+        sendMsg(chatId, quiz.getCurrentQuestion());
         break;
       default:
         if (quiz.checkAnswer(user, input)) {
-          sendMsgFromQuiz(chatId, "It's right!");
+          sendMsg(chatId, "It's right!");
         } else {
-          sendMsgFromQuiz(chatId, "It's wrong!");
+          sendMsg(chatId, "It's wrong!");
         }
         if (!quiz.moveNextQuestion()) {
+          user.setStatus(0);
           sendMsg(chatId, "Your score: " + user.getScore());
           sendMsg(chatId, "Bye!");
-          user.setStatus(0);
         } else {
-          sendMsgFromQuiz(chatId, quiz.getCurrentQuestion());
+          sendMsg(chatId, quiz.getCurrentQuestion());
         }
     }
   }
@@ -158,111 +156,37 @@ public class Bot extends TelegramLongPollingBot {
     }
   }
 
-  public synchronized void sendMsgFromQuiz(String chatId, String s) {
-    SendMessage sendMessage = new SendMessage();
-    sendMessage.enableHtml(true);
-    sendMessage.setChatId(chatId);
-    sendMessage.setText(s);
-    setButtonsForQuiz(sendMessage);
-    try {
-      execute(sendMessage);
-    } catch (TelegramApiException e) {
-      e.printStackTrace();
-    }
-  }
-
-  public synchronized void sendMsgFromWiki(String chatId, String s) {
-    SendMessage sendMessage = new SendMessage();
-    sendMessage.enableHtml(true);
-    sendMessage.setChatId(chatId);
-    sendMessage.setText(s);
-    setButtonsForWiki(sendMessage);
-    try {
-      execute(sendMessage);
-    } catch (TelegramApiException e) {
-      e.printStackTrace();
-    }
-  }
-
   public synchronized void setButtons(SendMessage sendMessage) {
-    // Создаем клавиуатуру
     ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
     sendMessage.setReplyMarkup(replyKeyboardMarkup);
     replyKeyboardMarkup.setSelective(true);
     replyKeyboardMarkup.setResizeKeyboard(true);
     replyKeyboardMarkup.setOneTimeKeyboard(false);
 
-    // Создаем список строк клавиатуры
     List<KeyboardRow> keyboard = new ArrayList<KeyboardRow>();
 
-    // Первая строчка клавиатуры
-    KeyboardRow keyboardFirstRow = new KeyboardRow();
-    // Добавляем кнопки в первую строчку клавиатуры
-    keyboardFirstRow.add(new KeyboardButton("/help"));
-
-    // Вторая строчка клавиатуры
-    KeyboardRow keyboardSecondRow = new KeyboardRow();
-    // Добавляем кнопки во вторую строчку клавиатуры
-    keyboardSecondRow.add(new KeyboardButton("/startQuiz"));
-
-    // Третья строчка клавиатуры
-    KeyboardRow keyboardThirdRow = new KeyboardRow();
-    // Добавляем кнопки во вторую строчку клавиатуры
-    keyboardThirdRow.add(new KeyboardButton("/startWiki"));
-
-    // Добавляем все строчки клавиатуры в список
-    keyboard.add(keyboardFirstRow);
-    keyboard.add(keyboardSecondRow);
-    keyboard.add(keyboardThirdRow);
-    // и устанваливаем этот список нашей клавиатуре
+    keyboard.add(getKeyboardButtons("/help"));
+    switch (users.get(sendMessage.getChatId()).getStatus()) {
+      case 0:
+        keyboard.add(getKeyboardButtons("/startQuiz"));
+        keyboard.add(getKeyboardButtons("/startWiki"));
+        break;
+      case 1:
+        keyboard.add(getKeyboardButtons("/quit"));
+        break;
+      case 2:
+        keyboard.add(getKeyboardButtons("/repeat"));
+        keyboard.add(getKeyboardButtons("/result"));
+        keyboard.add(getKeyboardButtons("/quit"));
+        break;
+    }
     replyKeyboardMarkup.setKeyboard(keyboard);
   }
 
-  public synchronized void setButtonsForQuiz(SendMessage sendMessage) {
-    ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
-    sendMessage.setReplyMarkup(replyKeyboardMarkup);
-    replyKeyboardMarkup.setSelective(true);
-    replyKeyboardMarkup.setResizeKeyboard(true);
-    replyKeyboardMarkup.setOneTimeKeyboard(false);
-
-    List<KeyboardRow> keyboard = new ArrayList<KeyboardRow>();
-
-    KeyboardRow keyboardFirstRow = new KeyboardRow();
-    keyboardFirstRow.add(new KeyboardButton("/help"));
-
-    KeyboardRow keyboardSecondRow = new KeyboardRow();
-    keyboardSecondRow.add(new KeyboardButton("/repeat"));
-
-    KeyboardRow keyboardThirdRow = new KeyboardRow();
-    keyboardThirdRow.add(new KeyboardButton("/result"));
-
-    KeyboardRow keyboardFourthRow = new KeyboardRow();
-    keyboardFourthRow.add(new KeyboardButton("/quit"));
-
-    keyboard.add(keyboardFirstRow);
-    keyboard.add(keyboardSecondRow);
-    keyboard.add(keyboardThirdRow);
-    keyboard.add(keyboardFourthRow);
-    replyKeyboardMarkup.setKeyboard(keyboard);
-  }
-
-  public synchronized void setButtonsForWiki(SendMessage sendMessage) {
-    ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
-    sendMessage.setReplyMarkup(replyKeyboardMarkup);
-    replyKeyboardMarkup.setSelective(true);
-    replyKeyboardMarkup.setResizeKeyboard(true);
-    replyKeyboardMarkup.setOneTimeKeyboard(false);
-
-    List<KeyboardRow> keyboard = new ArrayList<KeyboardRow>();
-
-    KeyboardRow keyboardFirstRow = new KeyboardRow();
-    keyboardFirstRow.add(new KeyboardButton("/help"));
-    KeyboardRow keyboardSecondRow = new KeyboardRow();
-    keyboardSecondRow.add(new KeyboardButton("/quit"));
-
-    keyboard.add(keyboardFirstRow);
-    keyboard.add(keyboardSecondRow);
-    replyKeyboardMarkup.setKeyboard(keyboard);
+  private KeyboardRow getKeyboardButtons(String s) {
+    KeyboardRow keyboardQuitRow = new KeyboardRow();
+    keyboardQuitRow.add(new KeyboardButton(s));
+    return keyboardQuitRow;
   }
 
   public String getBotUsername() {

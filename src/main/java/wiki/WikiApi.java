@@ -50,7 +50,6 @@ public class WikiApi {
         return sm.toString();
       }
     } catch (Throwable cause) {
-      cause.printStackTrace();
       return "We don't know, what is it.";
     } finally {
       if (connection != null) {
