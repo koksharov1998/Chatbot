@@ -21,7 +21,6 @@ public class WikiApi {
     request = request.replace(" ", "_");
     String query = "https://en.wikipedia.org/w/api.php?action=opensearch&search=" + request
         + "&limit=1&format=xml";
-    System.out.println(query);
     HttpURLConnection connection = null;
     try {
       connection = (HttpURLConnection) new URL(query).openConnection();
