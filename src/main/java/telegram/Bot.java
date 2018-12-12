@@ -24,7 +24,7 @@ import wiki.WikiApi;
 
 public class Bot extends TelegramLongPollingBot {
 
-  private static final String helpGeneral = "Command list:\n/help -- shows command list\n/startQuiz -- starts quiz\n/startWiki -- finds on Wikipedia";
+  private static final String helpGeneral = "Command list:\n/help -- shows command list\n/quiz -- starts quiz\n/wiki -- finds on Wikipedia";
   private static final String helpQuiz = "Command list:\n/help -- shows command list\n/repeat -- repeat last question\n/result -- shows your score\n/quit -- finishes our quiz";
   private static final String helpWiki = "You can ask me something, and I will try to find about it a bit on Wikipedia!\n/help -- shows this message\n/quit -- you can choose something more interesting than searching on Wikipedia";
   private static String botName;
@@ -50,115 +50,125 @@ public class Bot extends TelegramLongPollingBot {
       if (!users.containsKey(chatId)) {
         users.put(chatId, new User(message.getChat().getFirstName(), Integer.parseInt(chatId)));
       }
-      handle(chatId, message);
+      String[] lines = handle(chatId, message);
+      for (String line : lines) {
+        sendMsg(chatId, line);
+      }
     }
   }
 
-  private void handle(String chatId, Message input) {
+  private String[] handle(String chatId, Message input) {
     String s = input.getText().toLowerCase();
+    String[] lines;
     switch (users.get(chatId).getStatus()) {
-      case 0:
-        handleGeneral(s, users.get(chatId));
-        break;
       case 1:
-        handleWiki(s, users.get(chatId));
+        lines = handleWiki(s, users.get(chatId));
         break;
       case 2:
-        handleQuiz(s, users.get(chatId));
+        lines = handleQuiz(s, users.get(chatId));
         break;
+      default:
+        lines = handleGeneral(s, users.get(chatId));
     }
+    return lines;
   }
 
-  private void handleWiki(String s, User user) {
-    String chatId = String.valueOf(user.getID());
-    if (s.equals("/help")) {
-      sendMsg(chatId, helpWiki);
-      return;
+  private String[] handleWiki(String s, User user) {
+    List<String> lines = new ArrayList<>();
+    switch (s) {
+      case "/help":
+        lines.add(helpWiki);
+        break;
+      case "/quit":
+        user.setStatus(0);
+        lines.add("Let's try something else!");
+        lines.add(helpGeneral);
+        break;
+      default:
+        user.setStatus(0);
+        lines.add(WikiApi.getWikiInformation(s));
+        lines.add("If you want to find something, you need to repeat a command /startWiki");
     }
-    if (s.equals("/quit")) {
-      users.get(chatId).setStatus(0);
-      sendMsg(chatId, "Let's try something else!");
-      sendMsg(chatId, helpGeneral);
-      return;
-    }
-    users.get(chatId).setStatus(0);
-    String w = WikiApi.getWikiInformation(s);
-    sendMsg(chatId, w);
-    sendMsg(chatId, "If you want to find something, you need to repeat a command /startWiki");
+    return lines.toArray(new String[0]);
   }
 
-  private void handleGeneral(String s, User user) {
-    String chatId = String.valueOf(user.getID());
+  private String[] handleGeneral(String s, User user) {
+    List<String> lines = new ArrayList<>();
     switch (s) {
       case "/start":
-        sendMsg(chatId, "Hello, dear " + user.getName()
+        lines.add("Hello, dear " + user.getName()
             + "!\nI'm java-chatbot. :)\nI can do some interesting things. We can find something on Wikipedia or play quiz!");
-        sendMsg(chatId, helpGeneral);
+        lines.add(helpGeneral);
         break;
       case "/help":
-        sendMsg(chatId, helpGeneral);
+        lines.add(helpGeneral);
         break;
-      case "/startwiki":
-        users.get(chatId).setStatus(1);
-        sendMsg(chatId, "What do you want to find on Wikipedia?");
+      case "/wiki":
+        user.setStatus(1);
+        lines.add("What do you want to find on Wikipedia?");
         break;
-      case "/startquiz":
-        users.get(chatId).setStatus(2);
+      case "/quiz":
+        user.setStatus(2);
         File file = new File("quiz.txt");
         FileInputStream fileInputStream = null;
+        Quiz quiz = quizes.get(user);
         try {
           fileInputStream = new FileInputStream(file);
           QuizReader quizReader = new QuizReader(fileInputStream);
-          quizes.put(users.get(chatId), new Quiz(quizReader));
+          quizes.put(user, new Quiz(quizReader));
+          quiz = quizes.get(user);
           fileInputStream.close();
         } catch (IOException e) {
           e.printStackTrace();
         }
-        sendMsg(chatId, "Hello, dear " + user.getName() + "!");
-        sendMsg(chatId, helpQuiz);
-        sendMsg(chatId, "Now we can start quiz! Let's go!");
-        users.get(chatId).setScore(0);
-        quizes.get(users.get(chatId)).moveNextQuestion();
-        sendMsg(chatId, quizes.get(users.get(chatId)).getCurrentQuestion());
+        lines.add("Hello, dear " + user.getName() + "!");
+        lines.add(helpQuiz);
+        lines.add("Now we can start quiz! Let's go!");
+        user.setScore(0);
+        quiz.moveNextQuestion();
+        lines.add(quiz.getCurrentQuestion());
         break;
       default:
-        sendMsg(chatId, "I don't understand you. Try to use command /help");
-
+        lines.add("I don't understand you. Try to use command /help");
     }
+    return lines.toArray(new String[0]);
   }
 
-  private void handleQuiz(String input, User user) {
-    String chatId = String.valueOf(user.getID());
+  private String[] handleQuiz(String s, User user) {
     Quiz quiz = quizes.get(user);
-    switch (input) {
+    List<String> lines = new ArrayList<>();
+    switch (s) {
       case "/help":
-        sendMsg(chatId, helpQuiz);
+        lines.add(helpQuiz);
         break;
       case "/quit":
         user.setStatus(0);
-        sendMsg(chatId, "Your score: " + user.getScore());
-        sendMsg(chatId, "Bye!");
+        lines.add("Your score: " + user.getScore());
+        lines.add("Bye!");
+        lines.add(helpGeneral);
         break;
       case "/result":
-        sendMsg(chatId, "Your score: " + user.getScore());
+        lines.add("Your score: " + user.getScore());
         break;
       case "/repeat":
-        sendMsg(chatId, quiz.getCurrentQuestion());
+        lines.add(quiz.getCurrentQuestion());
         break;
       default:
-        if (quiz.checkAnswer(user, input)) {
-          sendMsg(chatId, "It's right!");
+        if (quiz.checkAnswer(user, s)) {
+          lines.add("It's right!");
         } else {
-          sendMsg(chatId, "It's wrong!");
+          lines.add("It's wrong!");
         }
         if (!quiz.moveNextQuestion()) {
           user.setStatus(0);
-          sendMsg(chatId, "Your score: " + user.getScore());
-          sendMsg(chatId, "Bye!");
+          lines.add("Your score: " + user.getScore());
+          lines.add("Bye!");
+          lines.add(helpGeneral);
         } else {
-          sendMsg(chatId, quiz.getCurrentQuestion());
+          lines.add(quiz.getCurrentQuestion());
         }
     }
+    return lines.toArray(new String[0]);
   }
 
   public synchronized void sendMsg(String chatId, String s) {
@@ -186,8 +196,8 @@ public class Bot extends TelegramLongPollingBot {
     keyboard.add(getKeyboardButtons("/help"));
     switch (users.get(sendMessage.getChatId()).getStatus()) {
       case 0:
-        keyboard.add(getKeyboardButtons("/startQuiz"));
-        keyboard.add(getKeyboardButtons("/startWiki"));
+        keyboard.add(getKeyboardButtons("/quiz"));
+        keyboard.add(getKeyboardButtons("/wiki"));
         break;
       case 1:
         keyboard.add(getKeyboardButtons("/quit"));
