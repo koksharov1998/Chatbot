@@ -11,6 +11,11 @@ import wiki.WikiApi;
 public class WikiApiTest {
 
   @Test
+  void returnRight() {
+
+  }
+
+  @Test
   void returnRightInformationFromXML() throws ParserConfigurationException {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     DocumentBuilder builder = factory.newDocumentBuilder();

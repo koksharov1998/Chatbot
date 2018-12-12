@@ -24,7 +24,7 @@ import wiki.WikiApi;
 
 public class Bot extends TelegramLongPollingBot {
 
-  private static final String helpGeneral = "Command list:\n/help -- shows command list\n/startQuiz -- starts quiz\n/startwiki -- finds on Wikipedia";
+  private static final String helpGeneral = "Command list:\n/help -- shows command list\n/startQuiz -- starts quiz\n/startWiki -- finds on Wikipedia";
   private static final String helpQuiz = "Command list:\n/help -- shows command list\n/repeat -- repeat last question\n/result -- shows your score\n/quit -- finishes our quiz";
   private static final String helpWiki = "You can ask me something, and I will try to find about it a bit on Wikipedia!\n/help -- shows this message\n/quit -- you can choose something more interesting than searching on Wikipedia";
   private static String botName;
@@ -46,9 +46,9 @@ public class Bot extends TelegramLongPollingBot {
   public void onUpdateReceived(Update update) {
     Message message = update.getMessage();
     if (message != null && message.hasText()) {
-      String chatId = update.getMessage().getChatId().toString();
+      String chatId = message.getChatId().toString();
       if (!users.containsKey(chatId)) {
-        users.put(chatId, new User(chatId, users.size()));
+        users.put(chatId, new User(message.getChat().getFirstName(), Integer.parseInt(chatId)));
       }
       handle(chatId, message);
     }
@@ -70,7 +70,7 @@ public class Bot extends TelegramLongPollingBot {
   }
 
   private void handleWiki(String s, User user) {
-    String chatId = user.getName();
+    String chatId = String.valueOf(user.getID());
     if (s.equals("/help")) {
       sendMsg(chatId, helpWiki);
       return;
@@ -88,8 +88,12 @@ public class Bot extends TelegramLongPollingBot {
   }
 
   private void handleGeneral(String s, User user) {
-    String chatId = user.getName();
+    String chatId = String.valueOf(user.getID());
     switch (s) {
+      case "/start":
+        sendMsg(chatId, "Hello, dear " + user.getName() + "!\nI'm java-chatbot. :)\nI can do some interesting things. We can find something on Wikipedia or play quiz!");
+        sendMsg(chatId, helpGeneral);
+        break;
       case "/help":
         sendMsg(chatId, helpGeneral);
         break;
@@ -109,7 +113,7 @@ public class Bot extends TelegramLongPollingBot {
         } catch (IOException e) {
           e.printStackTrace();
         }
-        sendMsg(chatId, "Hello, dear user!");
+        sendMsg(chatId, "Hello, dear " + user.getName() + "!");
         sendMsg(chatId, helpQuiz);
         sendMsg(chatId, "Now we can start quiz! Let's go!");
         users.get(chatId).setScore(0);
@@ -123,7 +127,7 @@ public class Bot extends TelegramLongPollingBot {
   }
 
   private void handleQuiz(String input, User user) {
-    String chatId = user.getName();
+    String chatId = String.valueOf(user.getID());
     Quiz quiz = quizes.get(user);
     switch (input) {
       case "/help":
