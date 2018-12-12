@@ -18,10 +18,10 @@ import org.xml.sax.SAXException;
 public class WikiApi {
 
   public static String getWikiInformation(String request) {
-
     request = request.replace(" ", "_");
     String query = "https://en.wikipedia.org/w/api.php?action=opensearch&search=" + request
         + "&limit=1&format=xml";
+    System.out.println(query);
     HttpURLConnection connection = null;
     try {
       connection = (HttpURLConnection) new URL(query).openConnection();
@@ -32,11 +32,11 @@ public class WikiApi {
       if (HttpURLConnection.HTTP_OK == connection.getResponseCode()) {
         BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         String line = in.readLine();
-        return getString(line);
+        return getHTMLString(line);
       } else {
         return "Sorry, there are problems with Internet connection! Try later.";
       }
-    } catch (Throwable cause) {
+    } catch (SAXException | ParserConfigurationException | IOException e) {
       return "We don't know, what is it.";
     } finally {
       if (connection != null) {
@@ -45,7 +45,7 @@ public class WikiApi {
     }
   }
 
-  private static String getString(String line)
+  public static String getHTMLString(String line)
       throws ParserConfigurationException, IOException, SAXException {
     StringBuilder sm = new StringBuilder();
     if (line != null) {

@@ -91,7 +91,8 @@ public class Bot extends TelegramLongPollingBot {
     String chatId = String.valueOf(user.getID());
     switch (s) {
       case "/start":
-        sendMsg(chatId, "Hello, dear " + user.getName() + "!\nI'm java-chatbot. :)\nI can do some interesting things. We can find something on Wikipedia or play quiz!");
+        sendMsg(chatId, "Hello, dear " + user.getName()
+            + "!\nI'm java-chatbot. :)\nI can do some interesting things. We can find something on Wikipedia or play quiz!");
         sendMsg(chatId, helpGeneral);
         break;
       case "/help":

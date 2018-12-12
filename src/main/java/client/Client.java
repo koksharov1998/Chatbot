@@ -29,10 +29,10 @@ public class Client {
     oos.flush();
   }
 
-  private String read(){
+  private String read() {
     try {
       return ois.readUTF();
-    }catch (IOException e){
+    } catch (IOException e) {
       return "quit";
     }
   }
@@ -41,13 +41,13 @@ public class Client {
     Scanner scanner = new Scanner(System.in);
     Thread readingThread = new Thread(() -> {
       while (isAlive) {
-          String input = read();
-          if (input.equals("quit")) {
-            isAlive = false;
-          } else {
-            System.out.println(input);
-          }
+        String input = read();
+        if (input.equals("quit")) {
+          isAlive = false;
+        } else {
+          System.out.println(input);
         }
+      }
     });
     readingThread.start();
     String input = "";
@@ -70,7 +70,7 @@ public class Client {
           return true;
       }
     } catch (IOException e) {
-      System.out.println("Client disconnected to socket."+socket.toString());
+      System.out.println("Client disconnected to socket." + socket.toString());
       return false;
     }
   }

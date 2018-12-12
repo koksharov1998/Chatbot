@@ -11,19 +11,19 @@ public class QuizReaderTest {
 
   @Test
   void returnRightInputStreamAndWorkWithRightFile() {
-    try{
-    String answer = "Question: How many people go on the field from one football team?\nAnswer: 11";
-    InputStream stringInputStream = new ByteArrayInputStream(
-        answer.getBytes(StandardCharsets.UTF_8));
-    QuizReader quizReader = new QuizReader(stringInputStream);
-    Pair[] stream = quizReader.readFromStream();
-    assertEquals(stream[0].getFirst(),
-        "How many people go on the field from one football team?");
-    assertEquals(stream[0].getSecond(),
-        "11");
-  } catch (Exception e) {
-    System.out.println(e.getMessage());
-  }
+    try {
+      String answer = "Question: How many people go on the field from one football team?\nAnswer: 11";
+      InputStream stringInputStream = new ByteArrayInputStream(
+          answer.getBytes(StandardCharsets.UTF_8));
+      QuizReader quizReader = new QuizReader(stringInputStream);
+      Pair[] stream = quizReader.readFromStream();
+      assertEquals(stream[0].getFirst(),
+          "How many people go on the field from one football team?");
+      assertEquals(stream[0].getSecond(),
+          "11");
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
   }
 
   @Test
@@ -36,7 +36,7 @@ public class QuizReaderTest {
       Pair[] stream = quizReader.readFromStream();
       stream[0].getFirst();
     } catch (Exception ex) {
-      assertEquals(ex.getMessage().toString(),"File format is wrong");
+      assertEquals(ex.getMessage().toString(), "File format is wrong");
     }
   }
 }
