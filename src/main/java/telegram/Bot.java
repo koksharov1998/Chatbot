@@ -24,7 +24,7 @@ import wiki.WikiApi;
 
 public class Bot extends TelegramLongPollingBot {
 
-  private static final String help = "Command list:\n/help -- shows command list\n/startQuiz -- starts quiz\n/startwiki -- finds on Wikipedia";
+  private static final String helpGeneral = "Command list:\n/help -- shows command list\n/startQuiz -- starts quiz\n/startwiki -- finds on Wikipedia";
   private static final String helpQuiz = "Command list:\n/help -- shows command list\n/repeat -- repeat last question\n/result -- shows your score\n/quit -- finishes our quiz";
   private static final String helpWiki = "You can ask me something, and I will try to find about it a bit on Wikipedia!\n/help -- shows this message\n/quit -- you can choose something more interesting than searching on Wikipedia";
   private static String botName;
@@ -56,30 +56,42 @@ public class Bot extends TelegramLongPollingBot {
 
   private void handle(String chatId, Message input) {
     String s = input.getText().toLowerCase();
-    if (users.get(chatId).getStatus() == 1) {
-      if (s.equals("/help")) {
-        sendMsg(chatId, helpWiki);
-        return;
-      }
-      if (s.equals("/quit")) {
-        users.get(chatId).setStatus(0);
-        sendMsg(chatId, "Let's try something else!");
-        sendMsg(chatId, help);
-        return;
-      }
+    switch (users.get(chatId).getStatus()) {
+      case 0:
+        handleGeneral(s, users.get(chatId));
+        break;
+      case 1:
+        handleWiki(s, users.get(chatId));
+        break;
+      case 2:
+        handleQuiz(s, users.get(chatId));
+        break;
+    }
+  }
+
+  private void handleWiki(String s, User user) {
+    String chatId = user.getName();
+    if (s.equals("/help")) {
+      sendMsg(chatId, helpWiki);
+      return;
+    }
+    if (s.equals("/quit")) {
       users.get(chatId).setStatus(0);
-      String w = WikiApi.getWikiInformation(s);
-      sendMsg(chatId, w);
-      sendMsg(chatId, "If you want to find something, you need to repeat a command /startWiki");
+      sendMsg(chatId, "Let's try something else!");
+      sendMsg(chatId, helpGeneral);
       return;
     }
-    if (users.get(chatId).getStatus() == 2) {
-      handleQuiz(s, users.get(chatId));
-      return;
-    }
+    users.get(chatId).setStatus(0);
+    String w = WikiApi.getWikiInformation(s);
+    sendMsg(chatId, w);
+    sendMsg(chatId, "If you want to find something, you need to repeat a command /startWiki");
+  }
+
+  private void handleGeneral(String s, User user) {
+    String chatId = user.getName();
     switch (s) {
       case "/help":
-        sendMsg(chatId, help);
+        sendMsg(chatId, helpGeneral);
         break;
       case "/startwiki":
         users.get(chatId).setStatus(1);
@@ -106,6 +118,7 @@ public class Bot extends TelegramLongPollingBot {
         break;
       default:
         sendMsg(chatId, "I don't understand you. Try to use command /help");
+
     }
   }
 
