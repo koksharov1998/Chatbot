@@ -5,6 +5,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -17,7 +18,7 @@ import org.xml.sax.SAXException;
 
 public class WikiApi {
 
-  public static String getWikiInformation(String request) {
+  public String getWikiInformation(String request) {
     request = request.replace(" ", "_");
     String query = "https://en.wikipedia.org/w/api.php?action=opensearch&search=" + request
         + "&limit=1&format=xml";
@@ -35,8 +36,12 @@ public class WikiApi {
       } else {
         return "Sorry, there are problems with Internet connection! Try later.";
       }
-    } catch (SAXException | ParserConfigurationException | IOException e) {
-      return "We don't know, what is it.";
+    } catch (SAXException e) {
+      return "Some errors in response XML file.";
+    } catch (ParserConfigurationException e) {
+      return "Some errors in parsing of response XML file.";
+    } catch (IOException e) {
+      return "Some errors in connection with specified url.";
     } finally {
       if (connection != null) {
         connection.disconnect();
@@ -44,7 +49,7 @@ public class WikiApi {
     }
   }
 
-  public static String getHTMLString(String line)
+  public String getHTMLString(String line)
       throws ParserConfigurationException, IOException, SAXException {
     StringBuilder sm = new StringBuilder();
     if (line != null) {
@@ -66,7 +71,7 @@ public class WikiApi {
     return sm.toString();
   }
 
-  public static String getTagValue(String tag, Element element) {
+  public String getTagValue(String tag, Element element) {
     NodeList nodeList = element.getElementsByTagName(tag).item(0).getChildNodes();
     Node node = (Node) nodeList.item(0);
     return node.getNodeValue();

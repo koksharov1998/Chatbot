@@ -13,6 +13,7 @@ public class WikiApiTest {
 
   @Test
   void returnRightHTMLString() throws IOException, SAXException, ParserConfigurationException {
+    WikiApi wiki = new WikiApi();
     String testXML =
         "<SearchSuggestion xmlns=\"http://opensearch.org/searchsuggest2\" version=\"2.0\">\n"
             + "<Query xml:space=\"preserve\">russia</Query>\n"
@@ -27,7 +28,7 @@ public class WikiApiTest {
             + "</Item>\n"
             + "</Section>\n"
             + "</SearchSuggestion>";
-    String result = WikiApi.getHTMLString(testXML);
+    String result = wiki.getHTMLString(testXML);
     String expected = "<b>Russia</b>\n"
         + "<i>\n"
         + "Russia (Russian: Росси́я, tr. Rossiya, IPA: [rɐˈsʲijə]), officially the Russian Federation (Russian: Росси́йская Федера́ция, tr.\n"
@@ -38,12 +39,13 @@ public class WikiApiTest {
 
   @Test
   void returnRightInformationFromXML() throws ParserConfigurationException {
+    WikiApi wiki = new WikiApi();
     Element item = createTestXML();
-    assertEquals("Russia", WikiApi.getTagValue("Text", item));
+    assertEquals("Russia", wiki.getTagValue("Text", item));
     assertEquals(
         "Russia (Russian: Росси́я, tr. Rossiya, IPA: [rɐˈsʲijə]), officially the Russian Federation (Russian: Росси́йская Федера́ция, tr.",
-        WikiApi.getTagValue("Description", item));
-    assertEquals("https://en.wikipedia.org/wiki/Russia", WikiApi.getTagValue("Url", item));
+        wiki.getTagValue("Description", item));
+    assertEquals("https://en.wikipedia.org/wiki/Russia", wiki.getTagValue("Url", item));
   }
 
   private Element createTestXML() throws ParserConfigurationException {

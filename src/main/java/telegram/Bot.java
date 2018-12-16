@@ -27,10 +27,11 @@ public class Bot extends TelegramLongPollingBot {
   private static final String helpGeneral = "Command list:\n/help -- shows command list\n/quiz -- starts quiz\n/wiki -- finds on Wikipedia";
   private static final String helpQuiz = "Command list:\n/help -- shows command list\n/repeat -- repeat last question\n/result -- shows your score\n/quit -- finishes our quiz";
   private static final String helpWiki = "You can ask me something, and I will try to find about it a bit on Wikipedia!\n/help -- shows this message\n/quit -- you can choose something more interesting than searching on Wikipedia";
-  private static String botName;
-  private static String token;
+  private String botName;
+  private String token;
   private Map<String, User> users = new HashMap<>();
   private Map<User, Quiz> quizes = new HashMap<>();
+  private WikiApi wiki = new WikiApi();
 
   public Bot(String botName, String token, DefaultBotOptions options) {
     super(options);
@@ -50,46 +51,26 @@ public class Bot extends TelegramLongPollingBot {
       if (!users.containsKey(chatId)) {
         users.put(chatId, new User(message.getChat().getFirstName(), Integer.parseInt(chatId)));
       }
-      String[] lines = handle(chatId, message);
+      String[] lines = handle(chatId, message.getText().toLowerCase());
       for (String line : lines) {
         sendMsg(chatId, line);
       }
     }
   }
 
-  private String[] handle(String chatId, Message input) {
-    String s = input.getText().toLowerCase();
+  public String[] handle(String chatId, String input) {
     String[] lines;
     switch (users.get(chatId).getStatus()) {
       case 1:
-        lines = handleWiki(s, users.get(chatId));
+        lines = handleWiki(input, users.get(chatId));
         break;
       case 2:
-        lines = handleQuiz(s, users.get(chatId));
+        lines = handleQuiz(input, users.get(chatId));
         break;
       default:
-        lines = handleGeneral(s, users.get(chatId));
+        lines = handleGeneral(input, users.get(chatId));
     }
     return lines;
-  }
-
-  private String[] handleWiki(String s, User user) {
-    List<String> lines = new ArrayList<>();
-    switch (s) {
-      case "/help":
-        lines.add(helpWiki);
-        break;
-      case "/quit":
-        user.setStatus(0);
-        lines.add("Let's try something else!");
-        lines.add(helpGeneral);
-        break;
-      default:
-        user.setStatus(0);
-        lines.add(WikiApi.getWikiInformation(s));
-        lines.add("If you want to find something, you need to repeat a command /startWiki");
-    }
-    return lines.toArray(new String[0]);
   }
 
   private String[] handleGeneral(String s, User user) {
@@ -130,6 +111,25 @@ public class Bot extends TelegramLongPollingBot {
         break;
       default:
         lines.add("I don't understand you. Try to use command /help");
+    }
+    return lines.toArray(new String[0]);
+  }
+
+  private String[] handleWiki(String s, User user) {
+    List<String> lines = new ArrayList<>();
+    switch (s) {
+      case "/help":
+        lines.add(helpWiki);
+        break;
+      case "/quit":
+        user.setStatus(0);
+        lines.add("Let's try something else!");
+        lines.add(helpGeneral);
+        break;
+      default:
+        user.setStatus(0);
+        lines.add(wiki.getWikiInformation(s));
+        lines.add("If you want to find something, you need to repeat a command /startWiki");
     }
     return lines.toArray(new String[0]);
   }
