@@ -8,9 +8,9 @@ public class GeneralHandler implements Handler {
 
   private static final String helpGeneral = "Command list:\n/help -- shows command list\n/quiz -- starts quiz\n/wiki -- finds on Wikipedia";
 
-  public String[] handle(String s, User user) {
+  public String[] handle(String input, User user) {
     List<String> lines = new ArrayList<>();
-    switch (s) {
+    switch (input) {
       case "/start":
         lines.add("Hello, dear " + user.getName()
             + "!\nI'm java-chatbot. :)\nI can do some interesting things. We can find something on Wikipedia or play quiz!");

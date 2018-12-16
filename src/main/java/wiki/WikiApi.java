@@ -41,7 +41,7 @@ public class WikiApi {
     } catch (ParserConfigurationException e) {
       return "Some errors in parsing of response XML file.";
     } catch (IOException e) {
-      return "Some errors in connection with specified url.";
+      return "Some errors in connection with specified URL.";
     } finally {
       if (connection != null) {
         connection.disconnect();

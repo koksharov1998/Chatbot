@@ -20,7 +20,7 @@ public class Bot extends TelegramLongPollingBot {
 
   private String botName;
   private String token;
-  private Map<String, User> users = new ConcurrentHashMap<String, User>();
+  private Map<String, User> users = new ConcurrentHashMap<>();
   private GeneralHandler generalHandler = new GeneralHandler();
   private WikiHandler wikiHandler = new WikiHandler();
   private QuizHandler quizHandler = new QuizHandler();
@@ -50,7 +50,7 @@ public class Bot extends TelegramLongPollingBot {
     }
   }
 
-  public String[] handle(String chatId, String input) {
+  private String[] handle(String chatId, String input) {
     String[] lines;
     switch (users.get(chatId).getStatus()) {
       case 1:
@@ -65,7 +65,7 @@ public class Bot extends TelegramLongPollingBot {
     return lines;
   }
 
-  public synchronized void sendMsg(String chatId, String s) {
+  private synchronized void sendMsg(String chatId, String s) {
     SendMessage sendMessage = new SendMessage();
     sendMessage.enableHtml(true);
     sendMessage.setChatId(chatId);
@@ -78,7 +78,7 @@ public class Bot extends TelegramLongPollingBot {
     }
   }
 
-  public synchronized void setButtons(SendMessage sendMessage) {
+  private synchronized void setButtons(SendMessage sendMessage) {
     ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
     sendMessage.setReplyMarkup(replyKeyboardMarkup);
     replyKeyboardMarkup.setSelective(true);

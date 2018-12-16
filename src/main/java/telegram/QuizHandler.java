@@ -14,12 +14,12 @@ import server.User;
 public class QuizHandler implements Handler {
 
   private static final String helpQuiz = "Command list:\n/help -- shows command list\n/start -- run new quiz\n/repeat -- repeat last question\n/result -- shows your score\n/quit -- finishes our quiz";
-  private Map<User, Quiz> quizes = new ConcurrentHashMap<User, Quiz>();
+  private Map<User, Quiz> quizes = new ConcurrentHashMap<>();
 
-  public String[] handle(String s, User user) {
+  public String[] handle(String input, User user) {
     Quiz quiz = quizes.get(user);
     List<String> lines = new ArrayList<>();
-    switch (s) {
+    switch (input) {
       case "/start":
         File file = new File("quiz.txt");
         quiz = quizes.get(user);
@@ -54,7 +54,7 @@ public class QuizHandler implements Handler {
         lines.add(quiz.getCurrentQuestion());
         break;
       default:
-        if (quiz.checkAnswer(user, s)) {
+        if (quiz.checkAnswer(user, input)) {
           lines.add("It's right!");
         } else {
           lines.add("It's wrong!");
