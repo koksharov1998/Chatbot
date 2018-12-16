@@ -39,4 +39,19 @@ public class User {
   public void upScore() {
     score++;
   }
+
+  public boolean equals(Object anObject) {
+    if (this == anObject) {
+      return true;
+    }
+    if (anObject instanceof User) {
+      User anUser = (User) anObject;
+      return this.hashCode() == anUser.hashCode();
+    }
+    return false;
+  }
+
+  public int hashCode() {
+    return ID;
+  }
 }
