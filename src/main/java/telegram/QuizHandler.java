@@ -20,9 +20,11 @@ public class QuizHandler implements Handler {
     Quiz quiz = quizes.get(user);
     List<String> lines = new ArrayList<>();
     switch (input) {
+      case "/help":
+        lines.add(helpQuiz);
+        break;
       case "/start":
         File file = new File("quiz.txt");
-        quiz = quizes.get(user);
         try {
           FileInputStream fileInputStream = new FileInputStream(file);
           QuizReader quizReader = new QuizReader(fileInputStream);
@@ -38,9 +40,6 @@ public class QuizHandler implements Handler {
         user.setScore(0);
         quiz.moveNextQuestion();
         lines.add(quiz.getCurrentQuestion());
-        break;
-      case "/help":
-        lines.add(helpQuiz);
         break;
       case "/quit":
         user.setStatus(0);
