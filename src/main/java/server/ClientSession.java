@@ -26,7 +26,7 @@ public class ClientSession implements Runnable {
     try {
       out = new DataOutputStream(client.getOutputStream());
       in = new DataInputStream(client.getInputStream());
-      File file = new File("quiz.txt");
+      File file = new File("firstQuiz.txt");
       FileInputStream fileInputStream = new FileInputStream(file);
       QuizReader quizReader = new QuizReader(fileInputStream);
       Quiz quiz = new Quiz(quizReader);

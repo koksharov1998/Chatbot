@@ -59,6 +59,12 @@ public class Bot extends TelegramLongPollingBot {
       case 2:
         lines = quizHandler.handle(input, users.get(chatId));
         break;
+      case 3:
+        lines = quizHandler.handle(input, users.get(chatId));
+        break;
+      case 4:
+        lines = quizHandler.handle(input, users.get(chatId));
+        break;
       default:
         lines = generalHandler.handle(input, users.get(chatId));
     }
@@ -101,6 +107,14 @@ public class Bot extends TelegramLongPollingBot {
         keyboard.add(getKeyboardButtons("/repeat"));
         keyboard.add(getKeyboardButtons("/result"));
         keyboard.add(getKeyboardButtons("/quit"));
+        break;
+      case 3:
+        keyboard.add(getKeyboardButtons("/first"));
+        keyboard.add(getKeyboardButtons("/second"));
+        break;
+      case 4:
+        keyboard.add(getKeyboardButtons("/start"));
+        keyboard.add(getKeyboardButtons("/continue"));
         break;
     }
     replyKeyboardMarkup.setKeyboard(keyboard);

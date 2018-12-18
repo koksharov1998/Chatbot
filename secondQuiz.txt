@@ -1,0 +1,10 @@
+Question: The first four digits of PI? (Separate them by ",")
+Answer: 3,141
+Question: Write a laughing emoticon.
+Answer: :D
+Question: Yeltsin, Putin, ...?
+Answer: Medvedev
+Question: Trick or ...?
+Answer: treat
+Question: Roskomnadzor and ...?
+Answer: Telegram

@@ -24,8 +24,8 @@ public class GeneralHandler implements Handler {
         lines.add("What do you want to find on Wikipedia?");
         break;
       case "/quiz":
-        user.setStatus(2);
-        lines.add("Write command \"/start\" to start a quiz");
+        user.setStatus(4);
+        lines.add("Write command \"/start\" to start a quiz or /continue to continue old");
         break;
       default:
         lines.add("I don't understand you. Try to use command /help");
