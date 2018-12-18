@@ -74,6 +74,7 @@ public class QuizHandler implements Handler {
               quizes.put(user, new Quiz(quizReader));
               fileInputStream.close();
             } catch (IOException e) {
+              lines.add("Something wrong with reading of quiz file");
               e.printStackTrace();
             }
             user.setScore(0);
@@ -92,6 +93,7 @@ public class QuizHandler implements Handler {
               quizes.put(user, new Quiz(quizReader));
               fileInputStream.close();
             } catch (IOException e) {
+              lines.add("Something wrong with reading of quiz file");
               e.printStackTrace();
             }
             user.setScore(0);

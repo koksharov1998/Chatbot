@@ -133,4 +133,35 @@ public class QuizHandlerTest {
     assertEquals(2, lines.length);
     assertEquals(3, user.getStatus());
   }
+
+  @Test
+  void shouldContinueQuiz() {
+    User user = new User("User1", 1);
+    user.setStatus(4);
+    QuizHandler quizHandler = new QuizHandler();
+    quizHandler.handle("/start", user);
+    quizHandler.handle("/first", user);
+    quizHandler.handle("8", user);
+    quizHandler.handle("/quit", user);
+    user.setStatus(4);
+    String[] lines = quizHandler.handle("/continue", user);
+    assertEquals(helpQuiz, lines[0]);
+    assertEquals("Your score: 1", lines[1]);
+    assertEquals("How many days in a leap year?", lines[2]);
+    assertEquals(3, lines.length);
+    assertEquals(2, user.getStatus());
+  }
+
+  @Test
+  void shouldDoNotContinueQuizAndStartNew() {
+    User user = new User("User1", 1);
+    user.setStatus(4);
+    QuizHandler quizHandler = new QuizHandler();
+    String[] lines = quizHandler.handle("/continue", user);
+    assertEquals("You dont't have old quiz", lines[0]);
+    assertEquals("Now you should choose /first or /second quiz", lines[1]);
+    assertEquals(helpWithCreation, lines[2]);
+    assertEquals(3, lines.length);
+    assertEquals(3, user.getStatus());
+  }
 }
