@@ -43,9 +43,9 @@ public class GeneralHandlerTest {
   void shouldGoToQuiz() {
     User user = new User("User1", 1);
     String[] lines = generalHandler.handle("/quiz", user);
-    assertEquals("Write command \"/start\" to start a quiz", lines[0]);
+    assertEquals("Write command \"/start\" to start a quiz or /continue to continue old quiz", lines[0]);
     assertEquals(1, lines.length);
-    assertEquals(2, user.getStatus());
+    assertEquals(4, user.getStatus());
   }
 
   @Test

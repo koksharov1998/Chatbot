@@ -59,34 +59,6 @@ public class QuizHandler implements Handler {
             }
         }
         break;
-      case 4:
-        switch (input) {
-          case "/help":
-            lines.add(helpStartOrContinue);
-            break;
-          case "/start":
-            user.setStatus(3);
-            lines.add("Now you should choose /first or /second quiz");
-            lines.add(helpWithCreation);
-            break;
-          case "/continue":
-            if (quizes.containsKey(user)) {
-              user.setStatus(2);
-              quiz = quizes.get(user);
-              lines.add(helpQuiz);
-              lines.add("Your score: " + user.getScore());
-              lines.add(quiz.getCurrentQuestion());
-            } else {
-              user.setStatus(3);
-              lines.add("You dont't have old quiz");
-              lines.add("Now you should choose /first or /second quiz");
-              lines.add(helpWithCreation);
-            }
-            break;
-          default:
-            lines.add("I don't understand you. Try to use command /help");
-        }
-        break;
       case 3:
         File file;
         switch (input) {
@@ -130,8 +102,37 @@ public class QuizHandler implements Handler {
             lines.add(quizes.get(user).getCurrentQuestion());
             break;
           default:
-            lines.add("I don't understand you. Try to use command /help");
+            lines.add("I don't understand you. Try to use command /help1");
         }
+        break;
+      case 4:
+        switch (input) {
+          case "/help":
+            lines.add(helpStartOrContinue);
+            break;
+          case "/start":
+            user.setStatus(3);
+            lines.add("Now you should choose /first or /second quiz");
+            lines.add(helpWithCreation);
+            break;
+          case "/continue":
+            if (quizes.containsKey(user)) {
+              user.setStatus(2);
+              quiz = quizes.get(user);
+              lines.add(helpQuiz);
+              lines.add("Your score: " + user.getScore());
+              lines.add(quiz.getCurrentQuestion());
+            } else {
+              user.setStatus(3);
+              lines.add("You dont't have old quiz");
+              lines.add("Now you should choose /first or /second quiz");
+              lines.add(helpWithCreation);
+            }
+            break;
+          default:
+            lines.add("I don't understand you. Try to use command /help2");
+        }
+        break;
     }
     return lines.toArray(new String[0]);
   }
