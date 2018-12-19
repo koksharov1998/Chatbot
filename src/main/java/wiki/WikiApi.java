@@ -36,10 +36,13 @@ public class WikiApi {
         return "Sorry, there are problems with Internet connection! Try later.";
       }
     } catch (SAXException e) {
+      e.printStackTrace();
       return "Some errors in response XML file.";
     } catch (ParserConfigurationException e) {
+      e.printStackTrace();
       return "Some errors in parsing of response XML file.";
     } catch (IOException e) {
+      e.printStackTrace();
       return "Some errors in connection with specified URL.";
     } finally {
       if (connection != null) {

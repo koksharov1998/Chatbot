@@ -70,7 +70,7 @@ public class QuizHandler implements Handler {
             try {
               FileInputStream fileInputStream = new FileInputStream(file);
               QuizReader quizReader = new QuizReader(fileInputStream);
-              quizes.put(user, new Quiz(quizReader));
+              quizes.putIfAbsent(user, new Quiz(quizReader));
               fileInputStream.close();
             } catch (IOException e) {
               lines.add("Something wrong with reading of quiz file");
@@ -89,7 +89,7 @@ public class QuizHandler implements Handler {
             try {
               FileInputStream fileInputStream = new FileInputStream(file);
               QuizReader quizReader = new QuizReader(fileInputStream);
-              quizes.put(user, new Quiz(quizReader));
+              quizes.putIfAbsent(user, new Quiz(quizReader));
               fileInputStream.close();
             } catch (IOException e) {
               lines.add("Something wrong with reading of quiz file");
@@ -106,7 +106,7 @@ public class QuizHandler implements Handler {
             lines.add("I don't understand you. Try to use command /help");
         }
         break;
-      case QuizStart:
+        case QuizStart:
         switch (input) {
           case "/help":
             lines.add(helpStartOrContinue);

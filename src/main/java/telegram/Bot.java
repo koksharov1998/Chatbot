@@ -37,9 +37,8 @@ public class Bot extends TelegramLongPollingBot {
     Message message = update.getMessage();
     if (message != null && message.hasText()) {
       String chatId = message.getChatId().toString();
-      if (!users.containsKey(chatId)) {
-        users.put(chatId, new User(message.getChat().getFirstName(), Integer.parseInt(chatId)));
-      }
+      users.putIfAbsent(chatId,
+          new User(message.getChat().getFirstName(), Integer.parseInt(chatId)));
       String[] lines = handle(chatId, message.getText().toLowerCase());
       for (String line : lines) {
         sendMsg(chatId, line);

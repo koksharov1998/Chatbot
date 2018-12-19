@@ -60,17 +60,54 @@ public class QuizHandlerTest {
   }
 
   @Test
-  void shouldShowRightResult() {
+  void shouldShowRightResultAfterRightAnswer() {
     User user = new User("User1", 1);
     user.setStatus(UserStatus.QuizInGame);
     QuizHandler quizHandler = new QuizHandler();
     quizHandler.handle("/start", user);
     quizHandler.handle("/first", user);
-    quizHandler.handle("8", user);
-    String[] lines = quizHandler.handle("/result", user);
+    String[] lines = quizHandler.handle("8", user);
+    assertEquals("It's right!", lines[0]);
+    assertEquals(2, lines.length);
+    assertEquals(UserStatus.QuizInGame, user.getStatus());
+    lines = quizHandler.handle("/result", user);
     assertEquals("Your score: 1", lines[0]);
     assertEquals(1, lines.length);
     assertEquals(UserStatus.QuizInGame, user.getStatus());
+  }
+
+  @Test
+  void shouldShowRightResultAfterWrongAnswer() {
+    User user = new User("User1", 1);
+    user.setStatus(UserStatus.QuizInGame);
+    QuizHandler quizHandler = new QuizHandler();
+    quizHandler.handle("/start", user);
+    quizHandler.handle("/first", user);
+    String[] lines = quizHandler.handle("7", user);
+    assertEquals("It's wrong!", lines[0]);
+    assertEquals(2, lines.length);
+    assertEquals(UserStatus.QuizInGame, user.getStatus());
+    lines = quizHandler.handle("/result", user);
+    assertEquals("Your score: 0", lines[0]);
+    assertEquals(1, lines.length);
+    assertEquals(UserStatus.QuizInGame, user.getStatus());
+  }
+
+  @Test
+  void shouldEndTheQuiz() {
+    User user = new User("User1", 1);
+    user.setStatus(UserStatus.QuizInGame);
+    QuizHandler quizHandler = new QuizHandler();
+    quizHandler.handle("/start", user);
+    quizHandler.handle("/second", user);
+    for (int i = 0; i < 4; i++)
+      quizHandler.handle(" ", user);
+    String[] lines = quizHandler.handle(" ", user);
+    assertEquals("It's wrong!", lines[0]);
+    assertEquals("Your score: 0", lines[1]);
+    assertEquals("Bye!", lines[2]);
+    assertEquals(3, lines.length);
+    assertEquals(UserStatus.Default, user.getStatus());
   }
 
   @Test
@@ -164,5 +201,27 @@ public class QuizHandlerTest {
     assertEquals(helpWithCreation, lines[2]);
     assertEquals(3, lines.length);
     assertEquals(UserStatus.QuizChoosing, user.getStatus());
+  }
+
+  @Test
+  void shouldDoNotUnderstandCommandInQuizChoosing() {
+    User user = new User("User1", 1);
+    user.setStatus(UserStatus.QuizChoosing);
+    QuizHandler quizHandler = new QuizHandler();
+    String[] lines = quizHandler.handle("abracadabra", user);
+    assertEquals("I don't understand you. Try to use command /help", lines[0]);
+    assertEquals(1, lines.length);
+    assertEquals(UserStatus.QuizChoosing, user.getStatus());
+  }
+
+  @Test
+  void shouldDoNotUnderstandCommandInQuizStart() {
+    User user = new User("User1", 1);
+    user.setStatus(UserStatus.QuizStart);
+    QuizHandler quizHandler = new QuizHandler();
+    String[] lines = quizHandler.handle("abracadabra", user);
+    assertEquals("I don't understand you. Try to use command /help", lines[0]);
+    assertEquals(1, lines.length);
+    assertEquals(UserStatus.QuizStart, user.getStatus());
   }
 }
