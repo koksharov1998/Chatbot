@@ -3,13 +3,32 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.IOException;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import org.jmock.Expectations;
+import org.jmock.Mockery;
+import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 import wiki.WikiApi;
+import wiki.WikiApiInterface;
+
 
 public class WikiApiTest {
+
+  private final WikiApi wikiApi = new WikiApi();
+
+  @Test
+  void shouldCatchSAXException() {
+
+    Mockery context = new JUnit4Mockery();
+    final WikiApiInterface wikiApiInterface = context.mock(WikiApiInterface.class);
+    context.checking(new Expectations() {{
+      one(wikiApiInterface).getWikiInformation("abracadabra");
+      will(throwException(new SAXException("Some errors in response XML file.")));
+    }});
+    wikiApi.getWikiInformation("abracadabra");
+  }
 
   @Test
   void returnRightHTMLString() throws IOException, SAXException, ParserConfigurationException {
