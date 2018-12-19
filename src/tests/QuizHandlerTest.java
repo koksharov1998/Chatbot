@@ -1,8 +1,9 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
-import server.User;
+import telegram.User;
 import telegram.QuizHandler;
+import telegram.UserStatus;
 
 public class QuizHandlerTest {
 
@@ -13,55 +14,55 @@ public class QuizHandlerTest {
   @Test
   void shouldReturnQuizHelp() {
     User user = new User("User1", 1);
-    user.setStatus(2);
+    user.setStatus(UserStatus.QuizInGame);
     QuizHandler quizHandler = new QuizHandler();
     String[] lines = quizHandler.handle("/help", user);
     assertEquals(helpQuiz, lines[0]);
     assertEquals(1, lines.length);
-    assertEquals(2, user.getStatus());
+    assertEquals(UserStatus.QuizInGame, user.getStatus());
   }
 
   @Test
   void shouldReturnFromQuizToGeneral() {
     User user = new User("User1", 1);
-    user.setStatus(2);
+    user.setStatus(UserStatus.QuizInGame);
     QuizHandler quizHandler = new QuizHandler();
     String[] lines = quizHandler.handle("/quit", user);
     assertEquals("Your score: 0", lines[0]);
     assertEquals("Bye!", lines[1]);
     assertEquals(2, lines.length);
-    assertEquals(0, user.getStatus());
+    assertEquals(UserStatus.Default, user.getStatus());
   }
 
   @Test
   void shouldStartNewQuiz() {
     User user = new User("User1", 1);
-    user.setStatus(2);
+    user.setStatus(UserStatus.QuizInGame);
     QuizHandler quizHandler = new QuizHandler();
     String[] lines = quizHandler.handle("/start", user);
     assertEquals("Now you should choose /first or /second quiz", lines[0]);
     assertEquals(helpWithCreation, lines[1]);
     assertEquals(2, lines.length);
-    assertEquals(3, user.getStatus());
+    assertEquals(UserStatus.QuizChoosing, user.getStatus());
   }
 
   @Test
   void shouldRepeatQuestion() {
     User user = new User("User1", 1);
-    user.setStatus(2);
+    user.setStatus(UserStatus.QuizInGame);
     QuizHandler quizHandler = new QuizHandler();
     quizHandler.handle("/start", user);
     quizHandler.handle("/first", user);
     String[] lines = quizHandler.handle("/repeat", user);
     assertEquals("How many bits in byte?", lines[0]);
     assertEquals(1, lines.length);
-    assertEquals(2, user.getStatus());
+    assertEquals(UserStatus.QuizInGame, user.getStatus());
   }
 
   @Test
   void shouldShowRightResult() {
     User user = new User("User1", 1);
-    user.setStatus(2);
+    user.setStatus(UserStatus.QuizInGame);
     QuizHandler quizHandler = new QuizHandler();
     quizHandler.handle("/start", user);
     quizHandler.handle("/first", user);
@@ -69,24 +70,24 @@ public class QuizHandlerTest {
     String[] lines = quizHandler.handle("/result", user);
     assertEquals("Your score: 1", lines[0]);
     assertEquals(1, lines.length);
-    assertEquals(2, user.getStatus());
+    assertEquals(UserStatus.QuizInGame, user.getStatus());
   }
 
   @Test
   void shouldReturnHelpWithCreation() {
     User user = new User("User1", 1);
-    user.setStatus(3);
+    user.setStatus(UserStatus.QuizChoosing);
     QuizHandler quizHandler = new QuizHandler();
     String[] lines = quizHandler.handle("/help", user);
     assertEquals(helpWithCreation, lines[0]);
     assertEquals(1, lines.length);
-    assertEquals(3, user.getStatus());
+    assertEquals(UserStatus.QuizChoosing, user.getStatus());
   }
 
   @Test
   void shouldReturnFirstQuiz() {
     User user = new User("User1", 1);
-    user.setStatus(3);
+    user.setStatus(UserStatus.QuizChoosing);
     QuizHandler quizHandler = new QuizHandler();
     String[] lines = quizHandler.handle("/first", user);
     assertEquals("Hello, dear User1!", lines[0]);
@@ -94,13 +95,13 @@ public class QuizHandlerTest {
     assertEquals("Now we can start quiz! Let's go!", lines[2]);
     assertEquals("How many bits in byte?", lines[3]);
     assertEquals(4, lines.length);
-    assertEquals(2, user.getStatus());
+    assertEquals(UserStatus.QuizInGame, user.getStatus());
   }
 
   @Test
   void shouldReturnSecondQuiz() {
     User user = new User("User1", 1);
-    user.setStatus(3);
+    user.setStatus(UserStatus.QuizChoosing);
     QuizHandler quizHandler = new QuizHandler();
     String[] lines = quizHandler.handle("/second", user);
     assertEquals("Hello, dear User1!", lines[0]);
@@ -108,60 +109,60 @@ public class QuizHandlerTest {
     assertEquals("Now we can start quiz! Let's go!", lines[2]);
     assertEquals("The first four digits of PI? (Separate them by \",\")", lines[3]);
     assertEquals(4, lines.length);
-    assertEquals(2, user.getStatus());
+    assertEquals(UserStatus.QuizInGame, user.getStatus());
   }
 
   @Test
   void shouldReturnHelpStartOrContinue() {
     User user = new User("User1", 1);
-    user.setStatus(4);
+    user.setStatus(UserStatus.QuizStart);
     QuizHandler quizHandler = new QuizHandler();
     String[] lines = quizHandler.handle("/help", user);
     assertEquals(helpStartOrContinue, lines[0]);
     assertEquals(1, lines.length);
-    assertEquals(4, user.getStatus());
+    assertEquals(UserStatus.QuizStart, user.getStatus());
   }
 
   @Test
   void shouldGoToStartNewQuiz() {
     User user = new User("User1", 1);
-    user.setStatus(4);
+    user.setStatus(UserStatus.QuizStart);
     QuizHandler quizHandler = new QuizHandler();
     String[] lines = quizHandler.handle("/start", user);
     assertEquals("Now you should choose /first or /second quiz", lines[0]);
     assertEquals(helpWithCreation, lines[1]);
     assertEquals(2, lines.length);
-    assertEquals(3, user.getStatus());
+    assertEquals(UserStatus.QuizChoosing, user.getStatus());
   }
 
   @Test
   void shouldContinueQuiz() {
     User user = new User("User1", 1);
-    user.setStatus(4);
+    user.setStatus(UserStatus.QuizStart);
     QuizHandler quizHandler = new QuizHandler();
     quizHandler.handle("/start", user);
     quizHandler.handle("/first", user);
     quizHandler.handle("8", user);
     quizHandler.handle("/quit", user);
-    user.setStatus(4);
+    user.setStatus(UserStatus.QuizStart);
     String[] lines = quizHandler.handle("/continue", user);
     assertEquals(helpQuiz, lines[0]);
     assertEquals("Your score: 1", lines[1]);
     assertEquals("How many days in a leap year?", lines[2]);
     assertEquals(3, lines.length);
-    assertEquals(2, user.getStatus());
+    assertEquals(UserStatus.QuizInGame, user.getStatus());
   }
 
   @Test
   void shouldDoNotContinueQuizAndStartNew() {
     User user = new User("User1", 1);
-    user.setStatus(4);
+    user.setStatus(UserStatus.QuizStart);
     QuizHandler quizHandler = new QuizHandler();
     String[] lines = quizHandler.handle("/continue", user);
     assertEquals("You dont't have old quiz", lines[0]);
     assertEquals("Now you should choose /first or /second quiz", lines[1]);
     assertEquals(helpWithCreation, lines[2]);
     assertEquals(3, lines.length);
-    assertEquals(3, user.getStatus());
+    assertEquals(UserStatus.QuizChoosing, user.getStatus());
   }
 }

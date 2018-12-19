@@ -1,11 +1,11 @@
-package server;
+package telegram;
 
 public class User {
 
   private int ID;
   private String name;
   private int score = 0;
-  private int status = 0;
+  private UserStatus status = UserStatus.Default;
 
   public User(String name, int ID) {
     this.name = name;
@@ -16,11 +16,11 @@ public class User {
     return name;
   }
 
-  public int getStatus() {
+  public UserStatus getStatus() {
     return status;
   }
 
-  public void setStatus(int status) {
+  public void setStatus(UserStatus status) {
     this.status = status;
   }
 

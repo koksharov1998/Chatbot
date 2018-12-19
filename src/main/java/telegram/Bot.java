@@ -13,7 +13,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import server.User;
 
 
 public class Bot extends TelegramLongPollingBot {
@@ -21,9 +20,7 @@ public class Bot extends TelegramLongPollingBot {
   private String botName;
   private String token;
   private Map<String, User> users = new ConcurrentHashMap<>();
-  private GeneralHandler generalHandler = new GeneralHandler();
-  private WikiHandler wikiHandler = new WikiHandler();
-  private QuizHandler quizHandler = new QuizHandler();
+  private HandlerSelector handleSelector = new HandlerSelector();
 
   public Bot(String botName, String token, DefaultBotOptions options) {
     super(options);
@@ -51,24 +48,8 @@ public class Bot extends TelegramLongPollingBot {
   }
 
   private String[] handle(String chatId, String input) {
-    String[] lines;
-    switch (users.get(chatId).getStatus()) {
-      case 1:
-        lines = wikiHandler.handle(input, users.get(chatId));
-        break;
-      case 2:
-        lines = quizHandler.handle(input, users.get(chatId));
-        break;
-      case 3:
-        lines = quizHandler.handle(input, users.get(chatId));
-        break;
-      case 4:
-        lines = quizHandler.handle(input, users.get(chatId));
-        break;
-      default:
-        lines = generalHandler.handle(input, users.get(chatId));
-    }
-    return lines;
+    Handler handler = handleSelector.selectHandler(users.get(chatId).getStatus());
+    return handler.handle(input, users.get(chatId));
   }
 
   private synchronized void sendMsg(String chatId, String s) {
@@ -95,24 +76,24 @@ public class Bot extends TelegramLongPollingBot {
 
     keyboard.add(getKeyboardButtons("/help"));
     switch (users.get(sendMessage.getChatId()).getStatus()) {
-      case 0:
+      case Default:
         keyboard.add(getKeyboardButtons("/quiz"));
         keyboard.add(getKeyboardButtons("/wiki"));
         break;
-      case 1:
+      case Wiki:
         keyboard.add(getKeyboardButtons("/quit"));
         break;
-      case 2:
+      case QuizInGame:
         keyboard.add(getKeyboardButtons("/start"));
         keyboard.add(getKeyboardButtons("/repeat"));
         keyboard.add(getKeyboardButtons("/result"));
         keyboard.add(getKeyboardButtons("/quit"));
         break;
-      case 3:
+      case QuizChoosing:
         keyboard.add(getKeyboardButtons("/first"));
         keyboard.add(getKeyboardButtons("/second"));
         break;
-      case 4:
+      case QuizStart:
         keyboard.add(getKeyboardButtons("/start"));
         keyboard.add(getKeyboardButtons("/continue"));
         break;

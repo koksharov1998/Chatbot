@@ -2,7 +2,6 @@ package telegram;
 
 import java.util.ArrayList;
 import java.util.List;
-import server.User;
 import wiki.WikiApi;
 
 public class WikiHandler implements Handler {
@@ -17,11 +16,11 @@ public class WikiHandler implements Handler {
         lines.add(helpWiki);
         break;
       case "/quit":
-        user.setStatus(0);
+        user.setStatus(UserStatus.Default);
         lines.add("Let's try something else!");
         break;
       default:
-        user.setStatus(0);
+        user.setStatus(UserStatus.Default);
         lines.add(wiki.getWikiInformation(input));
         lines.add("If you want to find something, you need to repeat a command /startWiki");
     }

@@ -1,8 +1,8 @@
 package telegram;
 
+
 import java.util.ArrayList;
 import java.util.List;
-import server.User;
 
 public class GeneralHandler implements Handler {
 
@@ -20,11 +20,11 @@ public class GeneralHandler implements Handler {
         lines.add(helpGeneral);
         break;
       case "/wiki":
-        user.setStatus(1);
+        user.setStatus(UserStatus.Wiki);
         lines.add("What do you want to find on Wikipedia?");
         break;
       case "/quiz":
-        user.setStatus(4);
+        user.setStatus(UserStatus.QuizStart);
         lines.add("Write command \"/start\" to start a quiz or /continue to continue old quiz");
         break;
       default:

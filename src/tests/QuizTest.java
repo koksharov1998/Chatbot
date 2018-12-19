@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
 import server.Quiz;
 import server.QuizReader;
-import server.User;
+import telegram.User;
 
 
 class QuizTest {

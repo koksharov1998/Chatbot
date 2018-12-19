@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.Socket;
+import telegram.User;
 
 public class ClientSession implements Runnable {
 

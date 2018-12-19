@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import server.Quiz;
 import server.QuizReader;
-import server.User;
 
 public class QuizHandler implements Handler {
 
@@ -21,19 +20,19 @@ public class QuizHandler implements Handler {
   public String[] handle(String input, User user) {
     List<String> lines = new ArrayList<>();
     switch (user.getStatus()) {
-      case 2:
+      case QuizInGame:
         Quiz quiz = quizes.get(user);
         switch (input) {
           case "/help":
             lines.add(helpQuiz);
             break;
           case "/start":
-            user.setStatus(3);
+            user.setStatus(UserStatus.QuizChoosing);
             lines.add("Now you should choose /first or /second quiz");
             lines.add(helpWithCreation);
             break;
           case "/quit":
-            user.setStatus(0);
+            user.setStatus(UserStatus.Default);
             lines.add("Your score: " + user.getScore());
             lines.add("Bye!");
             break;
@@ -50,7 +49,7 @@ public class QuizHandler implements Handler {
               lines.add("It's wrong!");
             }
             if (!quiz.moveNextQuestion()) {
-              user.setStatus(0);
+              user.setStatus(UserStatus.Default);
               quizes.remove(user);
               lines.add("Your score: " + user.getScore());
               lines.add("Bye!");
@@ -59,14 +58,14 @@ public class QuizHandler implements Handler {
             }
         }
         break;
-      case 3:
+      case QuizChoosing:
         File file;
         switch (input) {
           case "/help":
             lines.add(helpWithCreation);
             break;
           case "/first":
-            user.setStatus(2);
+            user.setStatus(UserStatus.QuizInGame);
             file = new File("firstQuiz.txt");
             try {
               FileInputStream fileInputStream = new FileInputStream(file);
@@ -85,7 +84,7 @@ public class QuizHandler implements Handler {
             lines.add(quizes.get(user).getCurrentQuestion());
             break;
           case "/second":
-            user.setStatus(2);
+            user.setStatus(UserStatus.QuizInGame);
             file = new File("secondQuiz.txt");
             try {
               FileInputStream fileInputStream = new FileInputStream(file);
@@ -104,35 +103,35 @@ public class QuizHandler implements Handler {
             lines.add(quizes.get(user).getCurrentQuestion());
             break;
           default:
-            lines.add("I don't understand you. Try to use command /help1");
+            lines.add("I don't understand you. Try to use command /help");
         }
         break;
-      case 4:
+      case QuizStart:
         switch (input) {
           case "/help":
             lines.add(helpStartOrContinue);
             break;
           case "/start":
-            user.setStatus(3);
+            user.setStatus(UserStatus.QuizChoosing);
             lines.add("Now you should choose /first or /second quiz");
             lines.add(helpWithCreation);
             break;
           case "/continue":
             if (quizes.containsKey(user)) {
-              user.setStatus(2);
+              user.setStatus(UserStatus.QuizInGame);
               quiz = quizes.get(user);
               lines.add(helpQuiz);
               lines.add("Your score: " + user.getScore());
               lines.add(quiz.getCurrentQuestion());
             } else {
-              user.setStatus(3);
+              user.setStatus(UserStatus.QuizChoosing);
               lines.add("You dont't have old quiz");
               lines.add("Now you should choose /first or /second quiz");
               lines.add(helpWithCreation);
             }
             break;
           default:
-            lines.add("I don't understand you. Try to use command /help2");
+            lines.add("I don't understand you. Try to use command /help");
         }
         break;
     }

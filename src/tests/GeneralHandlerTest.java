@@ -1,8 +1,9 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
-import server.User;
+import telegram.User;
 import telegram.GeneralHandler;
+import telegram.UserStatus;
 
 public class GeneralHandlerTest {
 
@@ -15,7 +16,7 @@ public class GeneralHandlerTest {
     String[] lines = generalHandler.handle("/help", user);
     assertEquals(helpGeneral, lines[0]);
     assertEquals(1, lines.length);
-    assertEquals(0, user.getStatus());
+    assertEquals(UserStatus.Default, user.getStatus());
   }
 
   @Test
@@ -27,7 +28,7 @@ public class GeneralHandlerTest {
         lines[0]);
     assertEquals(helpGeneral, lines[1]);
     assertEquals(2, lines.length);
-    assertEquals(0, user.getStatus());
+    assertEquals(UserStatus.Default, user.getStatus());
   }
 
   @Test
@@ -36,7 +37,7 @@ public class GeneralHandlerTest {
     String[] lines = generalHandler.handle("/wiki", user);
     assertEquals("What do you want to find on Wikipedia?", lines[0]);
     assertEquals(1, lines.length);
-    assertEquals(1, user.getStatus());
+    assertEquals(UserStatus.Wiki, user.getStatus());
   }
 
   @Test
@@ -45,7 +46,7 @@ public class GeneralHandlerTest {
     String[] lines = generalHandler.handle("/quiz", user);
     assertEquals("Write command \"/start\" to start a quiz or /continue to continue old quiz", lines[0]);
     assertEquals(1, lines.length);
-    assertEquals(4, user.getStatus());
+    assertEquals(UserStatus.QuizStart, user.getStatus());
   }
 
   @Test
@@ -54,6 +55,6 @@ public class GeneralHandlerTest {
     String[] lines = generalHandler.handle("abracadabra", user);
     assertEquals("I don't understand you. Try to use command /help", lines[0]);
     assertEquals(1, lines.length);
-    assertEquals(0, user.getStatus());
+    assertEquals(UserStatus.Default, user.getStatus());
   }
 }
