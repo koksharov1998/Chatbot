@@ -15,7 +15,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class WikiApi implements WikiApiInterface {
+public class WikiApi implements Api {
 
   public String getWikiInformation(String request) {
     request = request.replace(" ", "_");

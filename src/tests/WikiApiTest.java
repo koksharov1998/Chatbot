@@ -1,33 +1,41 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.util.Iterator;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
+import wiki.Api;
 import wiki.WikiApi;
-import wiki.WikiApiInterface;
 
 
 public class WikiApiTest {
 
-  private final WikiApi wikiApi = new WikiApi();
+  @Test
+  void shouldCatchSAXException() throws IOException, SAXException, ParserConfigurationException {
+    Api api = mock(Api.class);
+    when(api.getHTMLString("abracadabra1")).thenThrow(new SAXException());
+    //TODO
+  }
 
   @Test
-  void shouldCatchSAXException() {
+  void shouldCatchIOException() throws IOException, SAXException, ParserConfigurationException {
+    Api api = mock(Api.class);
+    when(api.getHTMLString("abracadabra2")).thenThrow(new IOException());
+    //TODO
+  }
 
-    Mockery context = new JUnit4Mockery();
-    final WikiApiInterface wikiApiInterface = context.mock(WikiApiInterface.class);
-    context.checking(new Expectations() {{
-      one(wikiApiInterface).getWikiInformation("abracadabra");
-      will(throwException(new SAXException("Some errors in response XML file.")));
-    }});
-    wikiApi.getWikiInformation("abracadabra");
+  @Test
+  void shouldCatchParserConfigurationException() throws IOException, SAXException, ParserConfigurationException {
+    Api api = mock(Api.class);
+    when(api.getHTMLString("abracadabra3")).thenThrow(new ParserConfigurationException());
+    //TODO
   }
 
   @Test
